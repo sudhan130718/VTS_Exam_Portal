@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static '/css/developer_trainee_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+  <div class="greeting">
+    <div style="display: flex; gap: 10px;">
+    <img src="{{trainer.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
+    <div style="margin-top: 20px;">
+    <h3>Welcome, {{ request.user.full_name }} </h3>
+    <p>It's Monday, 10 May 2025</p>
+    </div>
+    </div>
+  </div>
+
+ 
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<div class="dashboard-row">
+
+<div class="recent-exams-section">
+ 
+  <!-- Exam Box -->
+  <div class="exam-box">
+     <!-- Section Header -->
+  <div class="section-title-bar">
+    <h4>Upcoming  Exams</h4>
+    <a href="#" class="view-all-link">View All</a>
+  </div>
+
+    <!-- Exam Row 1 -->
+    <div class="exam-row">
+      <div class="exam-info">
+        <p class="exam-title">Technical Questions</p>
+        <p class="exam-meta">Duration: 30 minutes</p>
+        <p class="exam-meta">Marks: 70</p>
+      </div>
+      <button class="upload-btn"><a href="" class="menu-link">Start Exam</a></button>
+    </div>
+
+    <!-- Exam Row 2 -->
+    <div class="exam-row">
+      <div class="exam-info">
+        <p class="exam-title">Practical Questions</p>
+        <p class="exam-meta">Duration: 45 minutes</p>
+        <p class="exam-meta">Marks: 100</p>
+      </div>
+      <button class="upload-btn">start exam</button>
+    </div>
+  </div>
+</div>
+
+<div class="active-trainers-section">
+  <div class="trainers-box-card">
+    <!-- Profile Section -->
+    <div class="trainer-profile">
+      <img src="{{trainer.user.profile_image.url }}" alt="Profile" class="profile-img" />
+      <h3 class="trainer-name">{{ request.user.full_name |upper}}</h3>
+      <p class="trainer-role">{{ trainer.expertise_area |upper }} - Trainer </p>
+    </div>
+
+    <!-- Course Progress -->
+    <div class="course-progress">
+      <h4>Course Progress</h4>
+
+      <div class="progress-item">
+        <span>HTML</span> <span style="float: right;">90%</span>
+        <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div>
+      </div>
+
+      <div class="progress-item">
+        <span>CSS</span>
+        <div class="progress-bar"><div class="progress-fill" style="width: 70%;"></div></div>
+      </div>
+
+      <div class="progress-item">
+        <span>JavaScript</span>
+        <div class="progress-bar"><div class="progress-fill" style="width: 50%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Exam Calendar -->
+    <div class="calendar-section">
+  <h4>Exam Calendar</h4>
+  <div id="exam-calendar" class="calendar-inline"></div>
+</div>
+  </div>
+</div>
+
+</div>
+
+{% endblock %}
+

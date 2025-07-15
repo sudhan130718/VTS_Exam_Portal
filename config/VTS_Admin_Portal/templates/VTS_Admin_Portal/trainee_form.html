@@ -1,0 +1,52 @@
+
+
+
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'VTS_Admin_Portal/css/trainer_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="trainer-form-container">
+    <h2>{% if trainee %}Edit{% else %}Add{% endif %} Trainee</h2>
+
+
+  <form method="POST" enctype="multipart/form-data" class="trainer-form">
+    {% csrf_token %}
+    <div class="form-grid">
+      {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="error">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-actions">
+        <button class="submit-btn" style="background-color: #888888;"><a href="{% url 'trainee_list' %}" class="menu-link">Cancel</a></button>
+      <button type="submit" class="submit-btn">{% if trainee %}Update{% else %}Add{% endif %}</button>
+    </div>
+  </form>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("input[name='start_date']", {
+    dateFormat: "Y/m/d"
+  });
+</script>
+{% endblock %}
+

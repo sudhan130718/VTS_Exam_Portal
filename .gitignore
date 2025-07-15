@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# Ignore only the images folder
+
+
+
+media/  

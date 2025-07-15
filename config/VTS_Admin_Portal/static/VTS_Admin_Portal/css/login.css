@@ -1,0 +1,126 @@
+/* ---------- Base Styles ---------- */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Urbanist', sans-serif;
+  background: url('../images/Login Image.png') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.login-container {
+  width: 600px;
+  height: auto;
+  padding: 40px;
+  box-sizing: border-box;
+  margin-right: 7vw;
+  margin-top: -40px;
+  color: black;
+  
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+  color: #131313;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #131313;
+  border-radius: 16px;
+  font-size: 15px;
+  box-sizing: border-box;
+  color: #131313;
+}
+
+button {
+  display: block;
+  padding: 12px 30px;
+  margin: 20px auto 0 auto;
+  background-color: #D8F275;
+  color: #131313;
+  font-weight: bold;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: auto;
+  min-width: 120px;
+  text-align: center;
+}
+
+button:hover {
+  background-color: #cde959;
+}
+
+.error-box {
+  background-color: #ffdddd;
+  color: #990000;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ---------- Responsive Media Queries ---------- */
+
+/* Small devices (phones, ≤ 768px) */
+@media screen and (max-width: 768px) {
+  .login-container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 30px 20px;
+    border-radius: 12px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px 20px;
+    min-width: 100px;
+    font-size: 14px;
+  }
+}
+
+/* Medium devices (tablets, 769px–1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .login-container {
+    width: 80%;
+    margin-right: 5vw;
+    padding: 35px;
+  }
+
+  h2 {
+    font-size: 26px;
+  }
+}
+
+/* Large devices (desktops/laptops, ≥ 1025px) */
+@media screen and (min-width: 1025px) {
+  .login-container {
+    width: 600px;
+    margin-right: 7vw;
+    padding: 40px;
+  }
+}

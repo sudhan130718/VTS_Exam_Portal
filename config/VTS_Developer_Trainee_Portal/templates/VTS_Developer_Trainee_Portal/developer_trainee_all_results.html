@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static '/css/developer_trainee_all_results.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="exam-result-section">
+    <div class="section-header">
+        <h3>Exam Results</h3>
+    </div>
+
+    <table class="result-table">
+        <thead>
+            <tr>
+                <th>Trainee Name</th>
+                <th>Exam</th>
+                <th>Trainer Name</th>
+                <th>Score</th>
+                <th>Total Marks</th>
+                <th>Submitted At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <td>{{ result.trainee.user.full_name }}</td>
+                    <td>{{ result.exam.title }}</td>
+                    <td>{{ result.trainee.assigned_trainer }}</td>
+                    <td>{{ result.score }}</td>
+                    <td>{{ result.exam.total_marks }}</td>
+                    <td>{{ result.submitted_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">No results found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+<br><br>
+<button style="float: right; background-color: #263238; margin: 0 auto;
+    color: #ffffff;"><a href="" class="menu-link">Download Result</a>
+</button>
+{% endblock %}

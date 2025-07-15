@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static '/css/developer_trainee_exam_result.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="exam-result-container">
+    <h2>Exam Completed</h2>
+    <p><strong>Exam:</strong> {{ exam.title }}</p>
+    <p><strong>Your Score:</strong> {{ score }} / {{ total }}</p>
+    <a href="{% url 'developer_trainee_exam' %}" class="btn btn-primary">Back to Exams</a>
+</div>
+{% endblock %}

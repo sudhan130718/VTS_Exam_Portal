@@ -1,0 +1,174 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'VTS_Admin_Portal/css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+ <div class="greeting">
+  <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+</div>
+
+  <!-- Part 2: Search Box -->
+  <!-- <div class="search-box">
+    <input type="text" placeholder="Search Trainees..." />
+    <div class="search-icon">
+      <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+    </div>
+  </div> -->
+
+  <div class="search-box">
+  <form method="get" action="{% url 'trainee_list' %}">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search Trainees..."
+      value="{{ search_query }}"
+    />
+    
+    <!-- Keep the role as hidden so it's not lost on search -->
+
+    <div class="search-icon">
+      <button type="submit" style="background: none; border: none;">
+        <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+      </button>
+    </div>
+  </form>
+</div>
+
+
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-stats">
+  <!-- Card 1 -->
+  <div class="stat-card" id="stat_trainee">
+    <div class="stat-info">
+      <h4>Total Trainees</h4>
+      <p>500</p>
+    </div>
+    <div class="stat-icon trainees-icon">
+      <img src="{% static 'images/Total Trainees.png' %}" alt="Trainees Icon">
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="stat-card" id="stat_course">
+    <div class="stat-info">
+      <h4>Active Courses</h4>
+      <p>15</p>
+    </div>
+    <div class="stat-icon courses-icon">
+      <img src="{% static 'images/courses.png' %}" alt="Courses Icon">
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="stat-card" id="stat_exam">
+    <div class="stat-info">
+      <h4>Upcoming Exams</h4>
+      <p>12</p>
+    </div>
+    <div class="stat-icon exams-icon">
+      <img src="{% static 'images/exams.png' %}" alt="Exams Icon">
+    </div>
+  </div>
+</div>
+<div class="dashboard-row">
+<div class="active-trainers-section">
+  <!-- Title and View All -->
+  <div class="section-title-bar">
+    <h4>Active Trainers</h4>
+    <a href="{% url 'developer_list' %}" class="view-all-link">View All</a>
+  </div>
+
+  <!-- Table-like Box with Add New inside -->
+  <div class="trainers-box">
+    <!-- Add New Button inside top-right corner -->
+    <div class="trainers-box-header">
+      <button class="add-new-btn"> <a href="{% url 'add_trainer' %}"  class="menu-link">  + Add New</a></button>
+    </div>
+
+    <!-- Trainer Row 1 -->
+
+    {% for dev in all_developers %}
+    
+
+    <div class="trainer-row">
+      <div class="trainer-img">
+        <img src="{{ dev.user.profile_image.url}}" alt="{{ dev.user.full_name }}">
+      </div>
+      <div class="trainer-info">
+        <p class="trainer-name">{{ dev.user.full_name }}</p>
+        <p class="trainer-role">{{ dev.expertise_area }}</p>
+      </div>
+      <div class="trainee-count">15 Trainees</div>
+    </div>
+{% endfor %}
+    
+  </div>
+</div>
+<div class="recent-exams-section">
+  <!-- Section Header -->
+  <div class="section-title-bar">
+    <h4>Recent Exams</h4>
+    <a href="{% url 'exam_list' %}" class="view-all-link">View All</a>
+  </div>
+
+  <!-- Exam Box -->
+  <div class="exam-box">
+    <!-- Exam Row 1 -->
+    <div class="exam-row">
+      <div class="exam-info">
+        <p class="exam-title">Technical Questions</p>
+        <p class="exam-meta">Duration: 30 minutes</p>
+        <p class="exam-meta">Marks: 70</p>
+      </div>
+      <button class="upload-btn"> <a  href="{% url 'add_exam' %}" class="menu-link"> Add Exam</a></button>
+    </div>
+
+    <!-- Exam Row 2 -->
+    <div class="exam-row">
+      <div class="exam-info">
+        <p class="exam-title">Practical Questions</p>
+        <p class="exam-meta">Duration: 45 minutes</p>
+        <p class="exam-meta">Marks: 100</p>
+      </div>
+      <button class="upload-btn" id="openModalBtn"> Add Exam</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal Overlay -->
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn" id="closeModalBtn">&times;</span>
+
+    <h2 class="modal-title">Upload Practical Question</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="submit-btn">Submit Question</button>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

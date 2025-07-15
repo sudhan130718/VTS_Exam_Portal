@@ -1,0 +1,115 @@
+from django.utils import timezone
+from django.shortcuts import render, get_object_or_404, redirect
+from VTS_Admin_Portal.models import Trainee
+from exam.forms import PracticalAnswerForm
+from exam.models import Exam, PracticalQuestion, TraineeAnswer, TraineeExam
+from xhtml2pdf import pisa
+from django.http import HttpResponse
+from django.template.loader import get_template
+import io
+
+# Create your views here.
+
+def developer_trainee_dashboard(request):
+       trainee = get_object_or_404(Trainee, user=request.user)
+       questions = PracticalQuestion.objects.all().order_by('-created_at')
+       
+     
+       return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_dashboard.html', {'trainee': trainee ,'questions': questions})
+               
+          
+
+def developer_trainee_exam(request):
+        trainee = get_object_or_404(Trainee, user=request.user)
+        
+     # Get exams for the trainee's course
+        # exams = Exam.objects.filter(course=trainee.assigned_course ).order_by('date', 'start_time')
+        exams = Exam.objects.all()
+        questions = PracticalQuestion.objects.all().order_by('-created_at')
+
+        if request.method == 'POST':
+         question_id = request.POST.get('question_id')
+         question = get_object_or_404(PracticalQuestion, id=question_id)
+         form = PracticalAnswerForm(request.POST, request.FILES)
+         if form.is_valid():
+            answer = form.save(commit=False)
+            answer.trainee = trainee
+            answer.question = question
+            answer.save()
+            return redirect('developer_trainee_dashboard')
+        else:
+         form = PracticalAnswerForm()
+
+
+
+        return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_exam.html', {
+        'trainee': trainee,
+        'exams': exams,
+        'questions': questions,
+        'form': form
+        })
+
+def developer_trainee_start_exam(request, exam_id):
+        exam = get_object_or_404(Exam, id=exam_id)
+        trainee = get_object_or_404(Trainee, user=request.user)
+        trainee_exam, created = TraineeExam.objects.get_or_create(trainee=trainee, exam=exam)
+        questions = exam.questions.all()
+    
+       
+
+        return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_start_exam.html', {
+        'trainee': trainee,'questions': questions, 'trainee_exam': trainee_exam,'exam':exam
+        
+        })
+
+def developer_trainee_submit_exam(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id)
+    trainee = request.user.trainee_profile
+    trainee_exam = get_object_or_404(TraineeExam, trainee=trainee, exam=exam)
+    score = 0
+
+    for question in exam.questions.all():
+        selected = request.POST.get(f'q{question.id}')
+
+        TraineeAnswer.objects.create(
+            trainee_exam=trainee_exam,
+            question=question,
+            selected_option=selected
+        )
+        if selected == question.correct_option:
+            score += 1
+
+    trainee_exam.score = score
+    trainee_exam.attended = True
+    trainee_exam.submitted_at = timezone.now()
+    trainee_exam.save()
+
+    return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_exam_result.html', {'exam':exam, 'score': score, 'total': exam.questions.count()})
+
+def developer_trainee_all_results(request):
+   results = TraineeExam.objects.select_related('trainee', 'exam') \
+    .filter(trainee__user=request.user) \
+    .order_by('-submitted_at')   
+   return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_all_results.html', {'results': results})
+
+
+def download_exam_result(request, exam_id):
+    trainee = request.user.trainee_profile  # adjust if different
+    exam = get_object_or_404(Exam, id=exam_id)
+    trainee_exam = get_object_or_404(TraineeExam, exam=exam, trainee=trainee)
+
+    template = get_template('exam/result_pdf_template.html')
+    html = template.render({
+        'exam': exam,
+        'trainee_exam': trainee_exam,
+        'score': trainee_exam.score,
+        'total': exam.questions.count()
+    })
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="result_{exam.title}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had an error while generating PDF')
+    return response

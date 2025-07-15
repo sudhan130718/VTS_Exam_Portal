@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Create New Exam</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exam_title" class="form-label">Exam Title</label>
+            <input type="text" name="title" class="form-control" id="exam_title" required>
+        </div>
+        <div class="mb-3">
+            <label for="exam_duration" class="form-label">Duration (minutes)</label>
+            <input type="number" name="duration" class="form-control" id="exam_duration" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Exam</button>
+    </form>
+</div>
+{% endblock %}

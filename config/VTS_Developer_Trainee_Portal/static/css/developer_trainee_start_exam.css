@@ -1,0 +1,86 @@
+/* General Layout */
+.container {
+  max-width: 850px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Urbanist', sans-serif;
+  color: #203742;
+}
+
+/* Exam Title */
+.container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #203742;
+}
+
+/* Each Question Block */
+.mb-4 {
+  background-color: #f7fbe6;
+  border-left: 5px solid #cde673;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.mb-4 p {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Radio Buttons & Options */
+.mb-4 input[type="radio"] {
+  margin-right: 8px;
+  accent-color: #cde673;
+}
+
+.mb-4 label {
+  margin-bottom: 8px;
+  display: block;
+  cursor: pointer;
+}
+
+/* Submit Button */
+.btn-success {
+  background-color: #203742;
+  border: none;
+  color: #fff;
+  padding: 12px 30px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 30px auto 0;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #162a33;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    margin: 20px 10px;
+    padding: 20px 15px;
+  }
+
+  .container h2 {
+    font-size: 22px;
+  }
+
+  .mb-4 p {
+    font-size: 15px;
+  }
+
+  .btn-success {
+    width: 100%;
+    padding: 12px;
+  }
+}

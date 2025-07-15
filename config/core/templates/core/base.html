@@ -1,0 +1,178 @@
+ 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VTS Exam Portal</title>
+ {% load static %}
+
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+   {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <div class="dashboard-container">
+  <div class="sidebar">
+    <div class="logo">
+      <img src="{% static 'images/logo.jpg' %}" alt="Logo" />
+      <h2>VTS Exam Portal</h2>
+    </div>
+
+    <ul class="menu"> 
+      {% if user.role in 'admin' %}
+      <a href="{% url 'admin_dashboard' %}" class="menu-link">
+      <li>
+        <img src="{% static 'images/overview.png' %}" alt=""> Overview </li></a>
+    
+
+
+
+             
+<li class="has-submenu">
+  <div class="menu-link">
+    <img src="{% static 'images/Design.png' %}" alt="">&nbsp;&nbsp;&nbsp;
+    Designing <i class="fas fa-chevron-down submenu-arrow"></i>
+  </div>
+  <ul class="submenu">
+    <li><a href="{% url 'developer_list' %}?role=designer">Designer</a></li>
+    <li><a href="{% url 'trainee_list' %}?role=designer_trainee">Trainee Designer</a></li>
+  </ul>
+</li>
+      
+     
+<li class="has-submenu">
+  <div class="menu-link">
+    <img src="{% static 'images/development.jpg' %}" alt="">&nbsp;&nbsp;&nbsp;
+    Development <i class="fas fa-chevron-down submenu-arrow"></i>
+  </div>
+  <ul class="submenu">
+    <li><a href="{% url 'developer_list' %}?role=developer">Developer</a></li>
+    <li><a href="{% url 'trainee_list' %}?role=developer_trainee">Trainee Developer</a></li>
+  </ul>
+</li>
+
+<li class="has-submenu">
+  <div class="menu-link">
+    <img src="{% static 'images/exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
+    Exams <i class="fas fa-chevron-down submenu-arrow"></i>
+  </div>
+  <ul class="submenu">
+    <li><a href="{% url 'exam_list' %}">Technical</a></li>
+    <li><a href="{% url 'practical_question_list' %}">Practical</a></li>
+  </ul>
+</li>
+
+     
+    
+        
+      <a href="{% url 'exam_result_list' %}" class="menu-link">
+      <li><img src="{% static 'images/result.png' %}" alt=""> Result</li></a>
+{% endif %}
+
+<!-- for developer_trainee -->
+
+        {% if user.role == 'developer_trainee'  or user.role == 'designer_trainee' %}
+
+<a href="{% url 'developer_trainee_dashboard' %}" class="menu-link">
+      <li>
+        <img src="{% static 'images/overview.png' %}" alt=""> Overview </li></a>
+
+       
+
+        <a href="{% url 'developer_trainee_exam' %}" class="menu-link">
+        <li><img src="{% static 'images/exam.png' %}" alt=""> Exams</li></a>
+        
+      <a href="{% url 'developer_trainee_all_results' %}" class="menu-link">
+      <li><img src="{% static 'images/result.png' %}" alt=""> Result</li></a>
+
+
+    
+    
+         {% endif %}
+
+         <!-- for developer_trainer   and   designer_trainer  -->
+
+{% if user.role == 'developer' or user.role == 'designer' %}
+<a href="{% url 'developer_dashboard' %}" class="menu-link">
+      <li>
+        <img src="{% static 'images/overview.png' %}" alt=""> Overview </li></a>
+
+ <a href="{% url 'developer_trainee_card_view' %}" class="menu-link">
+        <li><img src="{% static 'images/development.jpg' %}" alt=""> Trainees</li></a>
+        <a href="{% url 'developer_exam' %}" class="menu-link">
+        <li><img src="{% static 'images/exam.png' %}" alt=""> Exams</li></a>
+        
+      <a href="{% url 'developer_result' %}" class="menu-link">
+      <li><img src="{% static 'images/result.png' %}" alt=""> Result</li></a>
+
+
+    
+    
+         {% endif %}
+
+    </ul>
+  </div>
+
+  <div class="main-content">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#exam-calendar", {
+    inline: true,
+    dateFormat: "Y-m-d",
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    flatpickr("input[name='start_date']", {
+      dateFormat: "Y/m/d"
+    });
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    flatpickr("input[name='dob']", {
+      dateFormat: "Y/m/d"
+    });
+  });
+   document.addEventListener("DOMContentLoaded", function () {
+    flatpickr("input[name='date']", {
+      dateFormat: "Y/m/d"
+    });
+  });
+  
+</script>
+<script>
+  const openModalBtn = document.getElementById('openModalBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const modalOverlay = document.getElementById('modalOverlay');
+
+  openModalBtn.addEventListener('click', () => {
+    modalOverlay.style.display = 'flex';
+  });
+
+  closeModalBtn.addEventListener('click', () => {
+    modalOverlay.style.display = 'none';
+  });
+
+  // Optional: Close when clicking outside modal content
+  window.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+      modalOverlay.style.display = 'none';
+    }
+  });
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
+
+    <!-- {% if user.role in 'admin designer' %}
+      {% endif %}
+        {% if user.role in 'admin developer' %}
+        {% endif %}
+         {% if user.role not in 'designer_trainee developer_trainee' %}
+      {% endif %} -->

@@ -1,0 +1,92 @@
+.trainer-form-container {
+  max-width: 950px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: 'Urbanist', sans-serif;
+}
+
+.trainer-form-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.trainer-form {
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  height: 36px;
+  padding: 5px 10px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.form-group  input[type="checkbox"] {
+width: 20px !important;
+accent-color: #d9f274 !important;
+}
+.form-group input[type="file"] {
+  height: auto;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.form-actions {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.submit-btn {
+  background-color: #000;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #333;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+input[type="date"] {
+  width: 200px;
+  height: 30px;
+  font-size: 16px;
+  padding: 4px;
+}

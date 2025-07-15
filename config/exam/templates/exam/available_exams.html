@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/exam_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="exam-container">
+    <h2 class="exam-title">Available Exams</h2>
+
+    {% if exams %}
+    <div class="exam-grid">
+        {% for exam in exams %}
+        <div class="exam-card">
+            <h3 class="exam-name">{{ exam.title }}</h3>
+            <p class="exam-duration">🕒 Duration: {{ exam.duration }} mins</p>
+            <p class="exam-date">📅 Created on: {{ exam.created_at|date:"F j, Y" }}</p>
+            <a href="{% url 'start_exam' exam.id %}" class="start-btn">Start Exam</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-exams">No exams available.</p>
+    {% endif %}
+</div>
+{% endblock %}

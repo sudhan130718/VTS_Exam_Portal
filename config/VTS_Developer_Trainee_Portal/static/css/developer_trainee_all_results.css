@@ -1,0 +1,30 @@
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #d9f274;
+    font-family: Urbanist;
+}
+.result-table th, .result-table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+    font-weight: 500;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+.section-header h3 {
+    font-size: 24px;
+}
+@media (max-width: 768px) {
+    .result-table {
+        font-size: 14px;
+    }
+}
+thead tr{
+    background-color: #263238;
+    color: #ffffff;
+}

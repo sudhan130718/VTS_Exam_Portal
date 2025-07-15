@@ -1,0 +1,82 @@
+
+
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static '/css/developer_trainee_exam.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+  <div class="greeting">
+    <div style="display: flex; gap: 10px;">
+    <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
+    <div style="margin-top: 20px;">
+    <h3>Welcome, {{ request.user.full_name }} </h3>
+    <p>It's Monday, 10 May 2025</p>
+    </div>
+    </div>
+  </div>
+
+ 
+
+</div>
+
+<div class="recent-exams-section">
+  <div class="exam-box">
+    <div class="section-title-bar">
+      <h4>Upcoming Exams</h4>
+    </div>
+{% for exam in exams %}
+    <div class="exam-row">
+      <div class="exam-info">
+        <p class="exam-title">{{ exam.title }}</p>
+        <p class="exam-meta">Duration: {{ exam.duration_minutes }} minutes</p>
+        <p class="exam-meta">Marks: {{ exam.total_marks }}</p>
+      </div>
+      <button class="upload-btn"> <a href="{% url 'developer_trainee_start_exam' exam.id %}" class="menu-link">Start Exam</a></button>
+    </div>
+{% endfor %}
+
+   {% for question in questions %}
+   
+    <div class="exam-row">
+      <div class="exam-info">
+        <p class="exam-title">Practical Questions</p>
+        <p class="exam-meta">Duration: 45 minutes</p>
+        <p class="exam-meta">Marks: 100</p>
+      </div>
+      <button class="upload-btn"><a href="{{ question.question_pdf.url }}" target="_blank" class="menu-link">Download</a></button>
+          <button class="upload-btn" id="openModalBtn">Upload Answer</button>
+
+    </div>
+
+
+    <div id="modalOverlay" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn" id="closeModalBtn">&times;</span>
+
+    <h2 class="modal-title">{{ question.course.name }}</h2>
+    <p style="display: flex; justify-content: space-around; color: rgb(58, 91, 9);"><strong>{{ question.title }}</strong></p>
+    
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+       <input type="hidden" name="question_id" value="{{ question.id }}">
+      <button type="submit" class="submit-btn">Submit Question</button>
+    </form>
+  </div>
+</div>
+     {% endfor %}
+  </div>
+</div>
+
+<!-- Modal Overlay -->
+
+
+
+
+
+{% endblock %}

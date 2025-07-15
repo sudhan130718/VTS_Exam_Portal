@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static '/css/developer_trainee_start_exam.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ exam.title }}</h2>
+    <form method="POST" action="{% url 'developer_trainee_submit_exam' exam.id %}">
+
+        {% csrf_token %}
+        {% for question in questions %}
+            <div class="mb-4">
+                <p><strong>Q{{ forloop.counter }}. {{ question.question_text  }}</strong></p>
+                <div>
+                    <input type="radio" name="q{{ question.id }}" value="A" required> {{ question.option_a }}<br>
+                    <input type="radio" name="q{{ question.id }}" value="B"> {{ question.option_b }}<br>
+                    <input type="radio" name="q{{ question.id }}" value="C"> {{ question.option_c }}<br>
+                    <input type="radio" name="q{{ question.id }}" value="D"> {{ question.option_d }}
+                </div>
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Submit Exam</button>
+    </form>
+</div>
+{% endblock %}

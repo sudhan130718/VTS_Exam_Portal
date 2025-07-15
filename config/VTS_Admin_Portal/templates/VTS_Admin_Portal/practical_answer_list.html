@@ -1,0 +1,50 @@
+
+
+
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'VTS_Admin_Portal/css/practical_answer_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+ <div class="container">
+    <h2>Practical Answers</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Trainee</th>
+          <th>Question</th>
+          <th>Course</th>
+          <th>Submitted At</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for answer in answers %}
+        <tr>
+          <td>{{ answer.trainee.user.full_name }}</td>
+          <td>{{ answer.question.title }}</td>
+          <td>{{ answer.question.course.name }}</td>
+          <td>{{ answer.submitted_at|date:"d M Y, h:i A" }}</td>
+          <td>
+            <a href="{{ answer.answer_pdf.url }}" target="_blank" class="download-btn">Download</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No answers uploaded yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+{% endblock %}
+
+
+

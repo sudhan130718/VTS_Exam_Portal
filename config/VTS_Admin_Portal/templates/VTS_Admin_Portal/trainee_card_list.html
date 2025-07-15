@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'VTS_Admin_Portal/css/trainee_card_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="trainee-list-section">
+  <div class="section-header">
+    <h3>Trainee List</h3>
+    <a href="{% url 'add_trainee' %}" class="add-btn">+ Add New</a>
+  </div>
+
+  <div class="trainee-card-container">
+    {% for trainee in trainees %}
+    <div class="trainee-card">
+      <div class="top-row">
+        <img src="{{ trainee.user.profile_image.url }}" alt="Trainee">
+        <div class="top-details">
+          <p class="trainee-name">{{ trainee.user.full_name }}</p>
+          <div class="action-icons">
+            <a href="{% url 'edit_trainee' trainee.id %}" title="Edit">
+               <i class="fas fa-edit action-icon" style="color: rgb(130, 110, 245);"></i>
+            </a>&nbsp;
+            <a href="{% url 'delete_trainee' trainee.id %}" title="Delete" onclick="return confirm('Are you sure?');">
+              <i class="fas fa-trash-alt action-icon" style="color: rgb(244, 74, 74);"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="middle-info">
+        <p><strong>Duration:</strong> {{ trainee.assigned_course.duration_weeks }} - weeks</p>
+        <p><strong>Course:</strong> {{ trainee.assigned_course }}</p>
+        <p><strong>Class Mode:</strong> {{ trainee.get_class_mode_display }}</p>
+      </div>
+
+      <div class="bottom-info">
+        <p><i class="fas fa-envelope action-icon" style="color: rgb(224, 130, 53);"></i> {{ trainee.user.email }}</p>
+        <p><i class="fas fa-phone-alt action-icon" style="color: rgb(134, 112, 196);"></i> {{ trainee.user.mobile }}</p>
+      </div>
+    </div>
+    {% empty %}
+      <p>No trainees found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
