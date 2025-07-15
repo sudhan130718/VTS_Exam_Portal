@@ -1,0 +1,230 @@
+/* Admin Dashboard Header */
+.admin-dashboard-header {
+  max-width: 1120px;
+  margin: 20px auto;
+  padding: 0 20px;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-family: 'Urbanist', sans-serif;
+}
+
+/* Greeting */
+.greeting h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #263238;
+}
+
+.greeting p {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.recent-exams-section {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.exam-box {
+  width: 100%;
+  min-height: 382px;
+  background-color: #d8f275; /* or #e7f7ab if you prefer */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-title-bar h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #203742;
+  margin: 0;
+}
+
+.exam-row {
+  background: #ffffff;
+  border: 1px solid #b3d95b;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.exam-row:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.exam-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exam-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #203742;
+  margin: 0;
+}
+
+.exam-meta {
+  font-size: 14px;
+  color: #444;
+  margin: 0;
+}
+
+.upload-btn {
+  background-color: #203742;
+  color: #cde673;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.upload-btn:hover {
+  background-color: #162b32;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .exam-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .upload-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+
+/* Modal overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal box */
+.modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.close-btn:hover {
+  color: #e61a52;
+}
+
+/* Modal Title */
+.modal-title {
+  font-size: 22px;
+  color: #131313;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+form label{
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+
+}
+form input, form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+form input[type="file"] {
+  border: none;
+  padding: 0;
+}
+
+/* Submit button */
+.submit-btn {
+  background-color: #cceb51;
+  color: #000;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 50%;
+  margin: 0 auto;
+}
+.submit-btn:hover {
+  background-color: #ccf03d;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
+
+

@@ -1,0 +1,66 @@
+.exam-result-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 30px 20px;
+  background-color: #f8fff0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Urbanist', sans-serif;
+  text-align: center;
+}
+
+.exam-result-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #203742;
+}
+
+.exam-result-container p {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #333;
+}
+
+.exam-result-container strong {
+  color: #000;
+}
+
+.exam-result-container .btn-primary {
+  background-color: #cde673;
+  border: none;
+  padding: 12px 24px;
+  color: #203742;
+  font-weight: bold;
+  border-radius: 8px;
+  font-size: 16px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.3s ease;
+  margin-top: 20px;
+}
+
+.exam-result-container .btn-primary:hover {
+  background-color: #b4ce5f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .exam-result-container {
+    margin: 40px 16px;
+    padding: 20px 15px;
+  }
+
+  .exam-result-container h2 {
+    font-size: 24px;
+  }
+
+  .exam-result-container p {
+    font-size: 16px;
+  }
+
+  .exam-result-container .btn-primary {
+    width: 100%;
+    padding: 12px 0;
+  }
+}

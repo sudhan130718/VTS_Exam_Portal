@@ -1,0 +1,65 @@
+.container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #e61a52;
+      margin-bottom: 25px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #e61a52;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .download-btn {
+      background-color: #e61a52;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .download-btn:hover {
+      background-color: #c41244;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      td {
+        position: relative;
+        padding-left: 50%;
+      }
+      td::before {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      td:nth-child(1)::before { content: "Trainee"; }
+      td:nth-child(2)::before { content: "Question"; }
+      td:nth-child(3)::before { content: "Course"; }
+      td:nth-child(4)::before { content: "Uploaded At"; }
+      td:nth-child(5)::before { content: "Download"; }
+      th {
+        display: none;
+      }
+    }

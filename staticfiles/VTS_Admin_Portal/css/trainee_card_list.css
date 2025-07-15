@@ -1,0 +1,126 @@
+.trainee-list-section {
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #131313;
+}
+
+h3 a {
+  text-decoration: none;
+  color: #5c5555;
+  font-size: 20px;
+  
+}
+
+h3 a:hover {
+  text-decoration: underline;
+  color: #bcde35;
+}
+.add-btn {
+  background-color: #d9f274;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.add-btn:hover {
+  background-color: #c4de5a;
+}
+
+.trainee-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.trainee-card {
+  width: 347px;
+  height: 387px;
+  background-color: #e7f7ab;
+  border: 1px solid #263238;
+  border-radius: 12px;
+  padding: 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.top-row img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.top-details {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trainee-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #263238;
+}
+
+.action-icons img {
+  width: 18px;
+  height: 18px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.middle-info {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+}
+
+.middle-info p {
+  margin: 4px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.bottom-info {
+  margin-top: 12px;
+}
+
+.bottom-info p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.bottom-info .icon {
+  width: 16px;
+  height: 16px;
+}

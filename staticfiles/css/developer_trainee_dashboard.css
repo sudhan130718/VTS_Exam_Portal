@@ -1,0 +1,320 @@
+/* Admin Dashboard Header */
+.admin-dashboard-header {
+  max-width: 1120px;
+  margin: 20px auto;
+  padding: 0 20px;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-family: 'Urbanist', sans-serif;
+}
+
+/* Greeting */
+.greeting h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #263238;
+}
+
+.greeting p {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Icons */
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification-icon {
+  position: relative;
+}
+
+.notification-icon img,
+.login-icon img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  padding: 2px 6px;
+  font-weight: bold;
+}
+
+/* Dashboard Flex Layout */
+.dashboard-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1120px;
+  margin: 40px auto;
+  flex-wrap: wrap;
+}
+
+.active-trainers-section,
+.recent-exams-section {
+  flex: 1;
+  min-width: 320px;
+  max-width: 544px;
+}
+
+/* Section Titles */
+.section-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-title-bar h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.view-all-link {
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Exam Box */
+.exam-box {
+  background: #D8F275;
+  border-radius: 10px;
+  height: 335px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.exam-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 1px solid #6799bf;
+  padding: 30px;
+}
+
+.exam-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exam-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.exam-meta {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+}
+
+.upload-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  height: 29px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .admin-dashboard-header {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+    gap: 10px;
+    width: 95%;
+  }
+
+  .dashboard-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .recent-exams-section,
+  .active-trainers-section {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+
+/* .trainers-box {
+  width: 347px;
+  height: 387px;
+  background-color: #e7f7ab;
+  border: 1px solid #263238;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+} */
+.trainers-box-card {
+  width: 431px;
+  height: 827px;
+  background-color: #e7f7ab;
+  border: 1px solid #263238;
+  border-radius: 12px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  font-family: 'Urbanist', sans-serif;
+}
+
+.trainer-profile {
+  text-align: center;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #263238;
+}
+
+.trainer-name {
+  margin: 12px 0 4px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #263238;
+}
+
+.trainer-role {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #444;
+}
+
+/* Course Progress */
+.course-progress {
+  width: 100%;
+}
+
+.course-progress h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #263238;
+}
+
+.progress-item {
+  margin-bottom: 12px;
+}
+
+.progress-item span {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.progress-bar {
+  background-color: #dcdcdc;
+  border-radius: 6px;
+  height: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background-color: #263238;
+  height: 100%;
+  width: 0;
+  border-radius: 6px;
+}
+
+/* Calendar */
+.calendar-section {
+  width: 100%;
+  margin-top: auto;
+}
+
+.calendar-section h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #263238;
+}
+
+
+.flatpickr-input[readonly] {
+    cursor: pointer;
+    display: none;
+}
+/* Override Flatpickr background */
+.flatpickr-calendar.inline {
+  background-color: #203742 !important;
+  width: 100% !important;
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* Change text color in days */
+.flatpickr-calendar .flatpickr-day {
+  color: #ffffff;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months{
+   color: #ffffff; 
+}
+.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month, .flatpickr-months .flatpickr-next-month.flatpickr-prev-month
+
+ {color: #ffffff; }
+/* Selected and today highlight color */
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange,
+.flatpickr-calendar .flatpickr-day.today {
+  background-color: #cde673 !important;
+   color: #ffffff !important;
+  border: none;
+}
+
+/* Weekday header style */
+#exam-calendar .flatpickr-weekday {
+  color: #cde673;
+  font-weight: bold;
+}
+
+
+@media (max-width: 600px) {
+  .trainers-box-card {
+    width: 90%;
+    height: auto;
+  }
+
+  .profile-img {
+    width: 100px;
+    height: 100px;
+  }
+}
