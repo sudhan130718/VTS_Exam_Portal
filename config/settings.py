@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-f00wzna%uf4jp34ihj(%#xllmg6twu_te(@0es@!ismsncc&_q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['vts-exam-portal.onrender.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
