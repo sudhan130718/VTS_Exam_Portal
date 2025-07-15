@@ -1,0 +1,57 @@
+No	🧠 Purpose	🧾 SQL Syntax Example
+
+1	Create a database	CREATE DATABASE school;
+
+2	Use a database	USE school;
+
+3	Create table (students)	CREATE TABLE students (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), age INT, grade VARCHAR(10));
+
+4	Insert data	INSERT INTO students (name, age, grade) VALUES ('Alice', 14, '8th');
+
+5	Select all rows	SELECT * FROM students;
+
+6	WHERE condition	SELECT * FROM students WHERE age > 13;
+
+7	BETWEEN filter	SELECT * FROM students WHERE age BETWEEN 13 AND 15;
+
+8	LIKE pattern	SELECT * FROM students WHERE name LIKE '%li%';
+
+9	IN list	SELECT * FROM students WHERE grade IN ('7th', '8th');
+
+10	ORDER BY ASC	SELECT * FROM students ORDER BY name ASC;
+
+11	ORDER BY DESC	SELECT * FROM students ORDER BY age DESC;
+
+12	LIMIT results	SELECT * FROM students LIMIT 3;
+
+13	UPDATE row	UPDATE students SET grade = '10th' WHERE id = 1;
+
+14	DELETE row	DELETE FROM students WHERE name = 'Emily';
+
+15	Create subjects table	CREATE TABLE subjects (id INT AUTO_INCREMENT PRIMARY KEY, student_id INT, subject_name VARCHAR(50), score INT, FOREIGN KEY (student_id) REFERENCES students(id));
+
+16	Insert into subjects	INSERT INTO subjects (student_id, subject_name, score) VALUES (1, 'Math', 80);
+
+17	INNER JOIN tables	SELECT students.name, subjects.subject_name FROM students JOIN subjects ON students.id = subjects.student_id;
+
+18	JOIN with WHERE	SELECT * FROM students JOIN subjects ON students.id = subjects.student_id WHERE students.name = 'Alice';
+
+19	LEFT JOIN	SELECT students.name, subjects.subject_name FROM students LEFT JOIN subjects ON students.id = subjects.student_id;
+
+20	RIGHT JOIN	SELECT students.name, subjects.subject_name FROM students RIGHT JOIN subjects ON students.id = subjects.student_id;
+
+21	COUNT() aggregate	SELECT COUNT(*) FROM students WHERE grade = '8th';
+
+22	AVG() function	SELECT AVG(score) FROM subjects WHERE subject_name = 'Math';
+
+23	SUM() function	SELECT SUM(score) FROM subjects WHERE student_id = 1;
+
+24	GROUP BY	SELECT grade, COUNT(*) FROM students GROUP BY grade;
+
+25	GROUP BY with AVG	SELECT subject_name, AVG(score) FROM subjects GROUP BY subject_name;
+
+26	HAVING with GROUP BY	SELECT subject_name, AVG(score) AS avg_score FROM subjects GROUP BY subject_name HAVING avg_score > 75;
+
+27	Alias columns	SELECT name AS student_name FROM students;
+
+28	ORDER BY after GROUP BY	SELECT grade, COUNT(*) FROM students GROUP BY grade ORDER BY COUNT(*) DESC;
