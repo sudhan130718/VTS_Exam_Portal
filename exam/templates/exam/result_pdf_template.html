@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            padding: 30px;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #f0fdf4;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .label {
+            width: 30%;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .value {
+            width: 70%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">VTS_Exam Result</div>
+
+    <table>
+        <tr>
+            <td class="label">Trainee Name</td>
+            <td class="value">{{ trainee_exam }}</td>
+        </tr>
+        <tr>
+            <td class="label">Course</td>
+            <td class="value">{{ course }}</td>
+        </tr>
+        <tr>
+            <td class="label">Exam Title</td>
+            <td class="value">{{ exam }}</td>
+        </tr>
+        <tr>
+            <td class="label">Trainer</td>
+            <td class="value">{{ trainer }}</td>
+        </tr>
+        <tr>
+            <td class="label">Score</td>
+            <td class="value">{{ score }} / {{ total }}</td>
+        </tr>
+        <tr>
+            <td class="label">Submitted Date</td>
+            <td class="value">{{ date|date:"d-m-Y H:i" }}</td>
+        </tr>
+    </table>
+
+</body>
+</html>

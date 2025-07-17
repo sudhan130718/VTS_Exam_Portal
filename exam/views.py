@@ -14,6 +14,7 @@ def create_exam(request):
 
 def add_exam_question(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id)
+    print('exam',exam)
     form = ExamQuestionForm(request.POST or None, initial={'exam': exam})
     if form.is_valid():
         form.save()
@@ -60,10 +61,24 @@ def submit_exam(request, exam_id):
     return render(request, 'exam/result.html', {'score': score, 'total': exam.questions.count()})
 
 
-
+from django.db.models import Q
 
 def exam_result_list(request):
     results = TraineeExam.objects.select_related('trainee__user', 'exam').all().order_by('-submitted_at')
+
+    search_result = request.GET.get('r', '')
+    if search_result:
+     results = results
+     
+
+     results = results.filter(
+        Q(trainee__user__full_name__icontains=search_result) |
+        Q(submitted_at__icontains=search_result) |
+        Q(exam__title__icontains=search_result)
+         
+ 
+       
+    )
     return render(request, 'exam/exam_result_list.html', {'results': results})
 
 

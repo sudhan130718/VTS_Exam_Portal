@@ -8,26 +8,39 @@
 {% endblock %}
 
 {% block content %}
-  <div class="admin-dashboard-header">
+ <div class="admin-dashboard-header">
   <!-- Part 1: Greeting -->
   <div class="greeting">
     <div style="display: flex; gap: 10px;">
     <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
     <div style="margin-top: 20px;">
-    <h3>Welcome, {{ request.user.full_name }} </h3>
-    <p>It's Monday, 10 May 2025</p>
+      <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+
+
     </div>
     </div>
   </div>
 
  
-
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
 </div>
 
 <div class="recent-exams-section">
   <div class="exam-box">
     <div class="section-title-bar">
-      <h4>Upcoming Exams</h4>
+      <h4>Technical  Exams</h4>
     </div>
 {% for exam in exams %}
     <div class="exam-row">
@@ -39,7 +52,9 @@
       <button class="upload-btn"> <a href="{% url 'developer_trainee_start_exam' exam.id %}" class="menu-link">Start Exam</a></button>
     </div>
 {% endfor %}
-
+<div class="section-title-bar">
+      <h4>Practical  Exams</h4>
+    </div>
    {% for question in questions %}
    
     <div class="exam-row">

@@ -6,6 +6,34 @@
 {% endblock %}
 
 {% block content %}
+<div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+  <div class="greeting">
+    <div style="display: flex; gap: 10px;">
+    <!-- <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/> -->
+    <div style="margin-top: 20px;">
+      <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+
+
+    </div>
+    </div>
+  </div>
+
+ 
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
+</div>
 
 
 <div class="exam-result-container">

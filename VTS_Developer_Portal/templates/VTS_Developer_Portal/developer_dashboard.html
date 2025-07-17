@@ -12,8 +12,8 @@
     <div style="display: flex; gap: 10px;">
     <img src="{{trainer.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
     <div style="margin-top: 20px;">
-    <h3>Welcome, {{ request.user.full_name }} </h3>
-    <p>It's Monday, 10 May 2025</p>
+          <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
     </div>
     </div>
   </div>

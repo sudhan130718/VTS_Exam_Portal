@@ -8,8 +8,8 @@
 {% block content %}
 <div class="trainee-list-section">
   <div class="section-header">
-    <h3>Trainee List</h3>
-    <a href="{% url 'add_trainee' %}" class="add-btn">+ Add New</a>
+    <h3>Trainee List > {{selected_class_mode}}</h3>
+    <a href="{% url 'add_trainee' %}" class="add-btn">+ Add Trainee</a>
   </div>
 
   <div class="trainee-card-container">
@@ -20,10 +20,10 @@
         <div class="top-details">
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
           <div class="action-icons">
-            <a href="{% url 'edit_trainee' trainee.id %}" title="Edit">
+            <a href="{% url 'edit_trainee' trainee.id %}?role={{selected_role}}" title="Edit">
                <i class="fas fa-edit action-icon" style="color: rgb(130, 110, 245);"></i>
             </a>&nbsp;
-            <a href="{% url 'delete_trainee' trainee.id %}" title="Delete" onclick="return confirm('Are you sure?');">
+            <a href="{% url 'delete_trainee' trainee.id %}?role={{selected_role}}" title="Delete" onclick="return confirm('Are you sure?');">
               <i class="fas fa-trash-alt action-icon" style="color: rgb(244, 74, 74);"></i>
             </a>
           </div>

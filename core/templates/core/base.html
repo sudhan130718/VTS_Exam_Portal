@@ -118,14 +118,25 @@
 
   <div class="main-content">
     {% block content %}{% endblock %}
+
+    {% if messages %}
+  <div class="message-container">
+    {% for message in messages %}
+      <div class="alert {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
   flatpickr("#exam-calendar", {
     inline: true,
     dateFormat: "Y-m-d",
   });
+   });
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -146,6 +157,7 @@
   
 </script>
 <script>
+   document.addEventListener("DOMContentLoaded", function () {
   const openModalBtn = document.getElementById('openModalBtn');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const modalOverlay = document.getElementById('modalOverlay');
@@ -164,7 +176,38 @@
       modalOverlay.style.display = 'none';
     }
   });
+
+  });
+   
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const filterBtn = document.querySelector('.filter-btn');
+    const closeBtn = document.querySelector('.close');
+    const filterModal = document.getElementById('filterModal');
+
+    if (filterBtn && filterModal) {
+      filterBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        filterModal.style.display = 'block';
+      });
+    }
+
+    if (closeBtn && filterModal) {
+      closeBtn.addEventListener('click', function () {
+        filterModal.style.display = 'none';
+      });
+    }
+
+    // Optional: Close modal on outside click
+    window.onclick = function (event) {
+      if (filterModal && event.target === filterModal) {
+        filterModal.style.display = "none";
+      }
+    };
+  });
+</script>
+
 
 {% block extra_js %}{% endblock %}
 </body>

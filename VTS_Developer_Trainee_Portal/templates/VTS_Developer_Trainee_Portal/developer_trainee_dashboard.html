@@ -12,8 +12,10 @@
     <div style="display: flex; gap: 10px;">
     <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
     <div style="margin-top: 20px;">
-    <h3>Welcome, {{ request.user.full_name }} </h3>
-    <p>It's Monday, 10 May 2025</p>
+      <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+
+
     </div>
     </div>
   </div>
@@ -53,7 +55,7 @@
         <p class="exam-meta">Duration: 30 minutes</p>
         <p class="exam-meta">Marks: 70</p>
       </div>
-      <button class="upload-btn"><a href="" class="menu-link">View All</a></button>
+      <button class="upload-btn"><a href="{% url 'developer_trainee_exam'  %}" class="menu-link">View All</a></button>
     </div>
 
     <!-- Exam Row 2 -->
@@ -64,7 +66,7 @@
         <p class="exam-meta">Duration: 45 minutes</p>
         <p class="exam-meta">Marks: 100</p>
       </div>
-      <button class="upload-btn">View All</button>
+      <button class="upload-btn"><a href="{% url 'developer_trainee_exam'  %}" class="menu-link">View All</a></button>
     </div>
    
   </div>

@@ -42,7 +42,7 @@ path('exams/edit_exam_question_form/<int:question_id>/', views.edit_exam_questio
 
       path('practicalquestions/', views.practical_question_list, name='practical_question_list'),
     path('practicalquestions/delete/<int:pk>/', views.delete_practical_question, name='delete_practical_question'),
-    path('answers/', views.practical_answer_list, name='practical_answer_list'),
+    path('practical_answer_list/<int:question_id>/', views.practical_answer_list, name='practical_answer_list'),
 
 
 ]

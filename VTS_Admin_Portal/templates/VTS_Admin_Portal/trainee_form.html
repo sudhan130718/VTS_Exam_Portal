@@ -29,7 +29,7 @@
     </div>
 
     <div class="form-actions">
-        <button class="submit-btn" style="background-color: #888888;"><a href="{% url 'trainee_list' %}" class="menu-link">Cancel</a></button>
+        <button class="submit-btn" style="background-color: #888888;"><a href="{% url 'trainee_list' %}?role={{selected_role}}" class="menu-link">Cancel</a></button>
       <button type="submit" class="submit-btn">{% if trainee %}Update{% else %}Add{% endif %}</button>
     </div>
   </form>

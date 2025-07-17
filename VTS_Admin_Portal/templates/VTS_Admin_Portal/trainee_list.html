@@ -9,10 +9,65 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+ <div class="greeting">
+  <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+</div>
+
+  <!-- Part 2: Search Box -->
+  <!-- <div class="search-box">
+    <input type="text" placeholder="Search Trainees..." />
+    <div class="search-icon">
+      <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+    </div>
+  </div> -->
+
+  <div class="search-box">
+  <form method="get" action="{% url 'trainee_list' %}">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search Trainees..."
+      value="{{ search_query }}"
+    />
+    
+    <!-- Keep the role as hidden so it's not lost on search -->
+
+    <div class="search-icon">
+      <button type="submit" style="background: none; border: none;">
+        <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+      </button>
+    </div>
+  </form>
+</div>
+
+
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
+</div>
+
 <div class="trainer-table-section">
   <div class="table-header">
     <h3>{{ title }} List</h3>
-    <a  href="{% url 'add_trainee' %}" class="add-btn">+ Add New</a>
+
+<button id="filterBtn" class="add-btn filter-btn" style="display: flex; flex-direction: row; gap: 15px; font-size: 16px;">
+  <img src="{% static 'images/filter.png' %}" style="background-color: #ffffff;" alt="Filter Icon" />
+  Filter
+</button>
+    <a  href="{% url 'add_trainee' %}?role={{selected_role}}" class="add-btn">+ Add Trainee</a>
   </div>
 
   <div class="table-responsive">
@@ -68,12 +123,12 @@
             {% endif %}
           </td>
           <td>
-            <a  href="{% url 'edit_trainee' trainee.id %}"  title="Edit">
+            <a  href="{% url 'edit_trainee' trainee.id %}?role={{selected_role}}"  title="Edit">
               <i class="fas fa-edit action-icon" style="color: rgb(130, 110, 245);"></i>
             </a>
             
 
-            <a href="{% url 'delete_trainee' trainee.id %}"
+            <a href="{% url 'delete_trainee' trainee.id %}?role={{selected_role}}"
    class="delete-icon"
    title="Delete"
    onclick="return confirm('Are you sure you want to delete this trainee?');">
@@ -87,6 +142,52 @@
     </table>
   </div>
 </div>
+
+<div id="filterModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 style="margin-bottom: 20px;">Filter by</h2>
+
+    <form method="get" action="{% url 'trainee_card_view' %}">
+      <div class="form-group">
+        <label for="class_mode">Class Mode</label>
+       <select name="class_mode" id="class_mode">
+  <option value="">-- Select --</option>
+  <option value="online" {% if selected_class_mode == 'online' %}selected{% endif %}>Online</option>
+  <option value="offline" {% if selected_class_mode == 'offline' %}selected{% endif %}>Offline</option>
+</select>
+      </div>
+
+      <div class="form-group">
+        <label for="course">Course</label>
+        <select name="course" id="course">
+  <option value="" disabled selected>__Select a Course__</option>
+  {% for c in course %}
+    <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_course_id %}selected{% endif %}>{{ c.name }}</option>
+  {% endfor %}
+</select>
+      </div>
+
+      <div class="form-group">
+       <label for="trainer">Trainer</label>
+<select name="trainer" id="trainer">
+  <option value="" disabled selected>__Select a Trainer__</option>
+  {% for t in trainers %}
+    <option value="{{ t.id }}" {% if t.id|stringformat:"s" == selected_trainer_id %}selected{% endif %}>{{ t.user.full_name }}</option>
+  {% endfor %}
+</select>
+      </div>
+
+      <!-- <div class="form-group">
+        <label for="duration">Duration (weeks)</label>
+        <input type="number" name="duration" id="duration" min="1" placeholder="Enter number of weeks" />
+      </div> -->
+
+      <button type="submit" class="submit-btn">Apply Filters</button>
+    </form>
+  </div>
+</div>
+
 
 
 {% endblock %}

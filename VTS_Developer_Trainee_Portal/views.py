@@ -1,10 +1,11 @@
+from django.contrib import messages
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from VTS_Admin_Portal.models import Trainee
 from exam.forms import PracticalAnswerForm
 from exam.models import Exam, PracticalQuestion, TraineeAnswer, TraineeExam
 from xhtml2pdf import pisa
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.template.loader import get_template
 import io
 
@@ -22,10 +23,13 @@ def developer_trainee_dashboard(request):
 def developer_trainee_exam(request):
         trainee = get_object_or_404(Trainee, user=request.user)
         
+        
      # Get exams for the trainee's course
-        # exams = Exam.objects.filter(course=trainee.assigned_course ).order_by('date', 'start_time')
-        exams = Exam.objects.all()
-        questions = PracticalQuestion.objects.all().order_by('-created_at')
+        exams = Exam.objects.filter(course=trainee.assigned_course ).order_by('date', 'start_time')
+        # exams = Exam.objects.all()
+        # questions = PracticalQuestion.objects.all().order_by('-created_at')
+        questions = PracticalQuestion.objects.filter(course=trainee.assigned_course ).order_by('-created_at')
+
 
         if request.method == 'POST':
          question_id = request.POST.get('question_id')
@@ -66,6 +70,12 @@ def developer_trainee_submit_exam(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id)
     trainee = request.user.trainee_profile
     trainee_exam = get_object_or_404(TraineeExam, trainee=trainee, exam=exam)
+
+    if trainee_exam.attended:
+        messages.warning(request, "You have already submitted this exam.")
+        return redirect('developer_trainee_all_results')
+    
+    
     score = 0
 
     for question in exam.questions.all():
@@ -92,22 +102,24 @@ def developer_trainee_all_results(request):
     .order_by('-submitted_at')   
    return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_all_results.html', {'results': results})
 
-
-def download_exam_result(request, exam_id):
-    trainee = request.user.trainee_profile  # adjust if different
-    exam = get_object_or_404(Exam, id=exam_id)
-    trainee_exam = get_object_or_404(TraineeExam, exam=exam, trainee=trainee)
+def download_exam_result(request, result_id):
+    trainee = request.user.trainee_profile  # or however you're linking
+    result = get_object_or_404(TraineeExam, id=result_id, trainee=trainee)
 
     template = get_template('exam/result_pdf_template.html')
     html = template.render({
-        'exam': exam,
-        'trainee_exam': trainee_exam,
-        'score': trainee_exam.score,
-        'total': exam.questions.count()
+        'exam': result.exam.title,
+        'trainee_exam': result.trainee.user.full_name,
+        'score': result.score,
+        'total': result.exam.total_marks,
+        'trainer':result.trainee.assigned_trainer,
+        'course':result.trainee.assigned_course,
+          'date':result.submitted_at 
+
     })
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="result_{exam.title}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="result_{result.exam.title}.pdf"'
 
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
