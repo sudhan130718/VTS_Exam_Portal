@@ -33,7 +33,7 @@
           <td>{{ exam.start_time }}</td>
           <td>{{ exam.duration_minutes }}</td>
           <td>{{ exam.total_marks }}</td>
-          <td><a href="" class="submit-btn">view Result</a></td>
+          <td><a href="{% url 'developer_result' %}?role={{ exam.title|urlencode }}" class="submit-btn">view Result</a></td>
           <td class="action-icons">
            
         

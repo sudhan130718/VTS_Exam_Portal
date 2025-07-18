@@ -33,6 +33,54 @@
 {% endblock %}
 
 {% block content %}
+ <div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+ <div class="greeting">
+  <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+</div>
+
+  <!-- Part 2: Search Box -->
+  <!-- <div class="search-box">
+    <input type="text" placeholder="Search Trainees..." />
+    <div class="search-icon">
+      <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+    </div>
+  </div> -->
+
+  <div class="search-box">
+  <form method="get" action="{% url 'developer_result' %}">
+    <input
+      type="text"
+      name="e"
+      placeholder="Search Result by Trainee..."
+      value="{{ search_exam }}"
+    />
+    
+    <!-- Keep the role as hidden so it's not lost on search -->
+
+    <div class="search-icon">
+      <button type="submit" style="background: none; border: none;">
+        <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+      </button>
+    </div>
+  </form>
+</div>
+
+
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
+</div>
 <div class="exam-result-section">
     <div class="section-header">
         <h3>Exam Results</h3>

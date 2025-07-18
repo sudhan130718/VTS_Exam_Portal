@@ -33,9 +33,10 @@ class TrainerUserForm(forms.Form):
     # USER FIELDS
     full_name = forms.CharField(max_length=100)
     email = forms.EmailField()
-    mobile = forms.CharField(max_length=15)
+    mobile = forms.CharField(max_length=10)
     profile_image = forms.ImageField(required=False)
     role = forms.ChoiceField(choices=User.ROLE_CHOICES)
+
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
     is_staff = forms.BooleanField(required=False, initial=False)
@@ -92,49 +93,7 @@ class TrainerUserForm(forms.Form):
             
 from django.db.models import Q
 
-# class TraineeForm(forms.ModelForm):
-#     class Meta:
-#         model = Trainee
-#         exclude = ['end_date'] 
-#         # fields = '__all__'
 
-#         widgets = {
-#              'start_date': forms.DateInput(
-#                 attrs={
-#                     'type': 'text',  # important: type text so Flatpickr can override
-#                     'placeholder': 'yyyy/mm/dd',
-#                     'class': 'form-control'
-#                 },
-#                 format='%Y/%m/%d'
-#             ),
-#             'dob': forms.DateInput(
-#                 attrs={
-#                     'type': 'text',  # important: type text so Flatpickr can override
-#                     'placeholder': 'yyyy/mm/dd',
-#                     'class': 'form-control'
-#                 },
-#                 format='%Y/%m/%d'
-#             ),
-#         }
-
-
-#     def __init__(self, *args, **kwargs):
-#       super().__init__(*args, **kwargs)
-
-#         # Set input formats for initial display values
-#       self.fields['start_date'].input_formats = ['%Y/%m/%d']
-#       self.fields['dob'].input_formats = ['%Y/%m/%d']
-
-#       assigned_users = Trainee.objects.values_list('user_id', flat=True)
-
-
-    
-#       if self.instance and self.instance.pk:
-#         self.fields['user'].queryset = User.objects.filter(
-#             Q(id=self.instance.user_id) | ~Q(id__in=assigned_users)
-#         )
-#       else:
-#         self.fields['user'].queryset = User.objects.exclude(id__in=assigned_users)
 
 class TraineeUserForm(forms.Form):
     # User fields
@@ -143,7 +102,8 @@ class TraineeUserForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
     role = forms.ChoiceField(choices=User.ROLE_CHOICES)
-    mobile = forms.CharField(max_length=15)
+
+    mobile = forms.CharField(max_length=10)
     profile_image = forms.ImageField(required=False)
 
     is_staff = forms.BooleanField(required=False, initial=False)
@@ -170,12 +130,20 @@ class TraineeUserForm(forms.Form):
     postal_code = forms.CharField()
     country = forms.CharField(initial='India')
 
+    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
+
         from .models import Course, Trainer  # import here to avoid circular import
+
+
         self.fields['assigned_course'].queryset = Course.objects.all()
         self.fields['assigned_trainer'].queryset = Trainer.objects.all()
+
+        
 
         for field in self.fields.values():
             field.widget.attrs.update({

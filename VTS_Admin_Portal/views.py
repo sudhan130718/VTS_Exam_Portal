@@ -483,24 +483,16 @@ def trainee_list_view(request):
     return render(request, 'VTS_Admin_Portal/trainee_list.html', {'trainees': trainees, 'title': title,  'search_query': search_query, 'selected_role':role,'trainers':trainers,
         'course':course})
 
-# def trainee_form_view(request, trainee_id=None):
-#     if trainee_id:
-#         trainee = get_object_or_404(Trainee, id=trainee_id)
-#     else:
-#         trainee = None
 
-#     form = TraineeForm(request.POST or None, request.FILES or None, instance=trainee)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('trainee_list')
-
-#     return render(request, 'VTS_Admin_Portal/trainee_form.html', {'form': form, 'trainee': trainee})
 
 
 def trainee_form_view(request, trainee_id=None):
     trainee = None
     user = None
     selected_role = request.GET.get('role')
+
+      
+
 
     if trainee_id:
         trainee = get_object_or_404(Trainee, id=trainee_id)
@@ -571,7 +563,7 @@ def trainee_form_view(request, trainee_id=None):
                 )
 
             
-            return redirect(f"{reverse('trainee_list')}?role={selected_role}")
+            return redirect(f"{reverse('trainee_list')}?role={user.role}")
     else:
         if trainee:
             form = TraineeUserForm(initial={
@@ -597,8 +589,10 @@ def trainee_form_view(request, trainee_id=None):
                 'country': trainee.country,
                 'is_active': trainee.is_active,
             })
+             
         else:
             form = TraineeUserForm()
+             
 
     return render(request, 'VTS_Admin_Portal/trainee_form.html', {
         'form': form,

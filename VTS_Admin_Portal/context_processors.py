@@ -1,5 +1,5 @@
 from exam.models import Exam
-from .models import Course, Trainer
+from .models import Course, Trainer,Trainee
 
 def developer_list(request):
     developers = Trainer.objects.filter(user__role='developer', is_active=True)
@@ -7,6 +7,9 @@ def developer_list(request):
 
     trainers = Trainer.objects.all()
     trainers_count = trainers.count() 
+
+    trainees = Trainee.objects.all()
+    trainees_count = trainees.count() 
 
     course = Course.objects.all()
     course_count = course.count()  
@@ -21,6 +24,7 @@ def developer_list(request):
         'all_developers': developers,
         'developer_count': developer_count,
         'trainers_count': trainers_count,
+        'trainees_count': trainees_count,
         'course_count': course_count,
          'exam_count': exam_count,
 
