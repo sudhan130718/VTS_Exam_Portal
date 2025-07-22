@@ -197,6 +197,18 @@ def delete_exam_question(request, question_id):
 
 def practical_question_list(request):
     questions = PracticalQuestion.objects.all().order_by('-created_at') 
+    
+    if request.user.role in ['developer', 'designer']:
+       trainer = Trainer.objects.get(user=request.user)
+       courses = Course.objects.filter(trainer=trainer)
+       
+      
+
+    # Filter practical questions for courses assigned to this trainer
+       questions = PracticalQuestion.objects.filter(course__in=courses).order_by('-id')
+      
+
+    
 
     form = PracticalQuestionForm()
 
@@ -491,9 +503,6 @@ def trainee_form_view(request, trainee_id=None):
     user = None
     selected_role = request.GET.get('role')
 
-      
-
-
     if trainee_id:
         trainee = get_object_or_404(Trainee, id=trainee_id)
         user = trainee.user
@@ -502,6 +511,10 @@ def trainee_form_view(request, trainee_id=None):
     if request.method == 'POST':
         form = TraineeUserForm(request.POST, request.FILES, initial={'email': user.email} if user else None)
         if form.is_valid():
+            assigned_course = form.cleaned_data['assigned_course']
+            assigned_trainer = assigned_course.trainer  # Auto-get trainer
+            start_date = assigned_course.start_date
+
             if trainee:
                 # Edit
                 user.full_name = form.cleaned_data['full_name']
@@ -519,16 +532,16 @@ def trainee_form_view(request, trainee_id=None):
                 trainee.gender = form.cleaned_data['gender']
                 trainee.dob = form.cleaned_data['dob']
                 trainee.class_mode = form.cleaned_data['class_mode']
-                trainee.assigned_course = form.cleaned_data['assigned_course']
-                trainee.assigned_trainer = form.cleaned_data['assigned_trainer']
-                trainee.start_date = form.cleaned_data['start_date']
+                trainee.assigned_course = assigned_course
+                trainee.assigned_trainer = assigned_trainer  # auto-filled
+                trainee.start_date = start_date
                 trainee.address_line1 = form.cleaned_data['address_line1']
                 trainee.address_line2 = form.cleaned_data['address_line2']
                 trainee.city = form.cleaned_data['city']
                 trainee.state = form.cleaned_data['state']
                 trainee.postal_code = form.cleaned_data['postal_code']
                 trainee.country = form.cleaned_data['country']
-                trainee.is_active = form.cleaned_data['is_active']
+                # trainee.is_active = form.cleaned_data['is_active']
                 trainee.save()
 
             else:
@@ -538,8 +551,8 @@ def trainee_form_view(request, trainee_id=None):
                     password=form.cleaned_data['password'],
                     full_name=form.cleaned_data['full_name'],
                     role=form.cleaned_data['role'],
-                    is_staff=form.cleaned_data.get('is_staff', False),
-                    is_active=form.cleaned_data.get('is_active', True),
+                    # is_staff=form.cleaned_data.get('is_staff', False),
+                    # is_active=form.cleaned_data.get('is_active', True),
                 )
                 user.mobile = form.cleaned_data['mobile']
                 user.profile_image = form.cleaned_data.get('profile_image')
@@ -550,19 +563,18 @@ def trainee_form_view(request, trainee_id=None):
                     gender=form.cleaned_data['gender'],
                     dob=form.cleaned_data['dob'],
                     class_mode=form.cleaned_data['class_mode'],
-                    assigned_course=form.cleaned_data['assigned_course'],
-                    assigned_trainer=form.cleaned_data['assigned_trainer'],
-                    start_date=form.cleaned_data['start_date'],
+                    assigned_course=assigned_course,
+                    assigned_trainer=assigned_trainer,  # auto-filled
+                    start_date=start_date,
                     address_line1=form.cleaned_data['address_line1'],
                     address_line2=form.cleaned_data['address_line2'],
                     city=form.cleaned_data['city'],
                     state=form.cleaned_data['state'],
                     postal_code=form.cleaned_data['postal_code'],
                     country=form.cleaned_data['country'],
-                    is_active=form.cleaned_data['is_active'],
+                    # is_active=form.cleaned_data['is_active'],
                 )
 
-            
             return redirect(f"{reverse('trainee_list')}?role={user.role}")
     else:
         if trainee:
@@ -572,15 +584,15 @@ def trainee_form_view(request, trainee_id=None):
                 'mobile': user.mobile,
                 'profile_image': user.profile_image,
                 'role': user.role,
-                'is_staff': user.is_staff,
-                'is_active': user.is_active,
+                # 'is_staff': user.is_staff,
+                # 'is_active': user.is_active,
 
                 'gender': trainee.gender,
                 'dob': trainee.dob.strftime('%Y/%m/%d') if trainee.dob else '',
                 'class_mode': trainee.class_mode,
                 'assigned_course': trainee.assigned_course,
-                'assigned_trainer': trainee.assigned_trainer,
-                'start_date': trainee.start_date.strftime('%Y/%m/%d') if trainee.start_date else '',
+                # 'assigned_trainer': trainee.assigned_trainer,  # Not needed in form
+                # 'start_date': trainee.start_date.strftime('%Y/%m/%d') if trainee.start_date else '',
                 'address_line1': trainee.address_line1,
                 'address_line2': trainee.address_line2,
                 'city': trainee.city,
@@ -589,17 +601,16 @@ def trainee_form_view(request, trainee_id=None):
                 'country': trainee.country,
                 'is_active': trainee.is_active,
             })
-             
         else:
             form = TraineeUserForm()
-             
 
     return render(request, 'VTS_Admin_Portal/trainee_form.html', {
         'form': form,
         'is_edit': bool(trainee),
-        'trainee':trainee,
-        'selected_role':selected_role
+        'trainee': trainee,
+        'selected_role': selected_role
     })
+
 
 def trainee_delete_view(request, trainee_id):
     trainee = get_object_or_404(Trainee, id=trainee_id)
@@ -608,3 +619,47 @@ def trainee_delete_view(request, trainee_id):
     user = trainee.user
     user.delete()
     return redirect(f"{reverse('trainee_list')}?role={selected_role}")
+
+from .forms import CourseForm
+
+def course_list(request):
+    courses = Course.objects.all()
+    search_course = request.GET.get('c', '') 
+    if search_course:
+     courses = courses
+     courses = courses.filter(
+    Q(name__icontains=search_course) 
+   
+     )
+        
+    return render(request, 'VTS_Admin_Portal/course_list.html', {'courses': courses})
+
+def add_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        
+
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            print("Start Date:", start_date)
+            form.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm()
+    return render(request, 'VTS_Admin_Portal/course_form.html', {'form': form, 'title': 'Add Course'})
+
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'VTS_Admin_Portal/course_form.html', {'form': form, 'title': 'Edit Course','is_edit': bool(course)})
+
+def delete_course(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    course.delete()
+    return redirect('course_list') 

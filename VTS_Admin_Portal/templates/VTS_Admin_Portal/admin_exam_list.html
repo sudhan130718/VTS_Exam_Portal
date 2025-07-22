@@ -53,7 +53,7 @@
     </div> -->
     <div class="login-icon">
       <a href="{% url 'admin_logout' %}">
-      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      <img src="{% static 'images/logout.jpeg' %}" alt="User Login" title="logout"/>
       </a>
     </div>
   </div>
@@ -75,6 +75,7 @@
           <th>Total Marks</th>
           <th></th>
           <th>Actions</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -99,6 +100,8 @@
 <i class="fas fa-trash-alt action-icon" style="color: rgb(244, 74, 74);"></i></a>
         
         </td>
+                  <td ><a style="color: #6622e5;"  href="{% url 'exam_result_list' %}?exam_id={{ exam.id }}" class="submit-btn">View Result</a></td>
+
         </tr>
         {% empty %}
         <tr><td colspan="7">No exams available.</td></tr>

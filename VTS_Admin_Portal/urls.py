@@ -45,4 +45,10 @@ path('exams/edit_exam_question_form/<int:question_id>/', views.edit_exam_questio
     path('practical_answer_list/<int:question_id>/', views.practical_answer_list, name='practical_answer_list'),
 
 
+     path('courses/course_list', views.course_list, name='course_list'),
+    path('courses/add/', views.add_course, name='add_course'),
+    path('courses/edit/<int:course_id>/', views.edit_course, name='edit_course'),
+     path('courses/<int:pk>/delete/', views.delete_course, name='delete_course'),
+
+
 ]

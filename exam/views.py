@@ -65,6 +65,10 @@ from django.db.models import Q
 
 def exam_result_list(request):
     results = TraineeExam.objects.select_related('trainee__user', 'exam').all().order_by('-submitted_at')
+    exam_id = request.GET.get('exam_id')
+    print("exam_id",exam_id)
+    if exam_id:
+        results = results.filter(exam__id=exam_id)
 
     search_result = request.GET.get('r', '')
     if search_result:

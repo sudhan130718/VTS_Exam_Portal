@@ -2,7 +2,7 @@ from django import forms
 from exam.models import PracticalQuestion
 
 
-from .models import Trainee, Trainer
+from .models import Course, Trainee, Trainer
 from django.conf import settings
 from django.apps import apps
 
@@ -106,8 +106,8 @@ class TraineeUserForm(forms.Form):
     mobile = forms.CharField(max_length=10)
     profile_image = forms.ImageField(required=False)
 
-    is_staff = forms.BooleanField(required=False, initial=False)
-    is_active = forms.BooleanField(required=False, initial=True)
+    # is_staff = forms.BooleanField(required=False, initial=False)
+    # is_active = forms.BooleanField(required=False, initial=True)
 
     # Trainee fields
     gender = forms.ChoiceField(choices=Trainee.GENDER_CHOICES)
@@ -117,11 +117,11 @@ class TraineeUserForm(forms.Form):
     )
     class_mode = forms.ChoiceField(choices=Trainee.CLASS_MODE_CHOICES)
     assigned_course = forms.ModelChoiceField(queryset=None, required=False)
-    assigned_trainer = forms.ModelChoiceField(queryset=None, required=False)
-    start_date = forms.DateField(
-        input_formats=['%Y/%m/%d'],
-        widget=forms.DateInput(attrs={'type': 'text', 'placeholder': 'yyyy/mm/dd'})
-    )
+    # assigned_trainer = forms.ModelChoiceField(queryset=None, required=False)
+    # start_date = forms.DateField(
+    #     input_formats=['%Y/%m/%d'],
+    #     widget=forms.DateInput(attrs={'type': 'text', 'placeholder': 'yyyy/mm/dd'})
+    # )
 
     address_line1 = forms.CharField()
     address_line2 = forms.CharField()
@@ -141,7 +141,7 @@ class TraineeUserForm(forms.Form):
 
 
         self.fields['assigned_course'].queryset = Course.objects.all()
-        self.fields['assigned_trainer'].queryset = Trainer.objects.all()
+        # self.fields['assigned_trainer'].queryset = Trainer.objects.all()
 
         
 
@@ -164,6 +164,32 @@ class TraineeUserForm(forms.Form):
         if password or confirm:
             if password != confirm:
                 raise ValidationError("Passwords do not match.")
+            
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = [
+            'name', 'description', 'category', 'duration_weeks',
+            'start_date', 'fee', 'trainer', 'is_active'
+        ]
+        widgets = {
+            'start_date': forms.DateInput(
+                attrs={
+                    'type': 'text',  # important: type text so Flatpickr can override
+                    'placeholder': 'yyyy/mm/dd',
+                    'class': 'form-control'
+                },
+                format='%Y/%m/%d'
+            ),
+         }
+        
+    def __init__(self, *args, **kwargs):
+      super().__init__(*args, **kwargs)
+        
+      self.fields['start_date'].input_formats = ['%Y/%m/%d']
+    
 
 
 class PracticalQuestionForm(forms.ModelForm):

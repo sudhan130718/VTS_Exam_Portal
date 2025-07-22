@@ -55,7 +55,7 @@
     </div> -->
     <div class="login-icon">
       <a href="{% url 'admin_logout' %}">
-      <img src="{% static 'images/Img 2.png' %}" alt="User Login" title="logout"/>
+      <img src="{% static 'images/logout.jpeg' %}" alt="User Login" title="logout"/>
       </a>
     </div>
   </div>
@@ -67,7 +67,9 @@
 
       <div class="table-header">
     <h3>Practical Questions</h3>
- <button class="add-new-btn"  id="openModalBtn">  + Add New</button>
+    {% if request.user.role not in 'developer designer' %}
+  <button class="add-new-btn" id="openModalBtn"> + Add New</button>
+{% endif %}
   </div>
    
     {% if messages %}
@@ -91,7 +93,7 @@
         <tr>
           <td>{{ question.course.name }}</td>
           <td>{{ question.title }}</td>
-          <td><a href="{{ question.question_pdf.url }}" target="_blank">View PDF</a></td>
+          <td><a href="{{ question.question_pdf.url }}" target="_blank">View Question</a></td>
           <td>   <a href="{% url 'practical_answer_list' question.id %}"
    style="background-color: rgb(149, 180, 48); 
           color: #fff; 

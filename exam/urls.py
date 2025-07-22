@@ -10,5 +10,7 @@ urlpatterns = [
     path('exams/<int:exam_id>/submit/', views.submit_exam, name='submit_exam'),
 
     path('exam/results/', views.exam_result_list, name='exam_result_list'),
+    # path('exam/results/<int:exam_id>/', views.exam_result_list, name='exam_result_list'),
+
 
 ]

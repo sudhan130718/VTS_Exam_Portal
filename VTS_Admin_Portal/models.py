@@ -112,6 +112,8 @@ class Course(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     
     duration_weeks = models.PositiveIntegerField(help_text="Duration in weeks")
+    start_date = models.DateField(default=date.today)
+    end_date = models.DateField(blank=True, null=True)
     
     
     fee = models.DecimalField(max_digits=8, decimal_places=2, help_text="Course fee in INR")
@@ -120,6 +122,11 @@ class Course(models.Model):
 
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.start_date  :
+            self.end_date = self.start_date + timedelta(weeks=self.duration_weeks)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

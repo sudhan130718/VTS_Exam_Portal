@@ -56,6 +56,10 @@
   </ul>
 </li>
 
+ 
+      <a href="{% url 'course_list' %}" class="menu-link">
+      <li><img src="{% static 'images/courses.png' %}" alt=""> Course</li></a>
+
 <li class="has-submenu">
   <div class="menu-link">
     <img src="{% static 'images/exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
@@ -104,8 +108,18 @@
 
  <a href="{% url 'developer_trainee_card_view' %}" class="menu-link">
         <li><img src="{% static 'images/development.jpg' %}" alt=""> Trainees</li></a>
-        <a href="{% url 'developer_exam' %}" class="menu-link">
-        <li><img src="{% static 'images/exam.png' %}" alt=""> Exams</li></a>
+      
+
+        <li class="has-submenu">
+  <div class="menu-link">
+    <img src="{% static 'images/exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
+    Exams <i class="fas fa-chevron-down submenu-arrow"></i>
+  </div>
+  <ul class="submenu">
+    <li><a href="{% url 'developer_exam' %}">Technical</a></li>
+    <li><a href="{% url 'practical_question_list' %}">Practical</a></li>
+  </ul>
+</li>
         
       <a href="{% url 'developer_result' %}" class="menu-link">
       <li><img src="{% static 'images/result.png' %}" alt=""> Result</li></a>
