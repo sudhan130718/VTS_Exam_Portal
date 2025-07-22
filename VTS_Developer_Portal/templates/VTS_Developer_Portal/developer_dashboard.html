@@ -43,17 +43,17 @@
      <!-- Section Header -->
   <div class="section-title-bar">
     <h4>Upcoming  Exams</h4>
-    <a href="#" class="view-all-link">View All</a>
+    <!-- <a href="#" class="view-all-link">View All</a> -->
   </div>
 
     <!-- Exam Row 1 -->
     <div class="exam-row">
       <div class="exam-info">
         <p class="exam-title">Technical Questions</p>
-        <p class="exam-meta">Duration: 30 minutes</p>
-        <p class="exam-meta">Marks: 70</p>
+        <p class="exam-meta">Duration: 20 minutes</p>
+        <p class="exam-meta">Marks: 10</p>
       </div>
-      <button class="upload-btn"><a href="" class="menu-link">Start Exam</a></button>
+      <button class="upload-btn"><a href="{% url 'developer_exam' %}" class="menu-link">View Exam</a></button>
     </div>
 
     <!-- Exam Row 2 -->
@@ -63,7 +63,7 @@
         <p class="exam-meta">Duration: 45 minutes</p>
         <p class="exam-meta">Marks: 100</p>
       </div>
-      <button class="upload-btn">start exam</button>
+      <button class="upload-btn"><a href="{% url 'practical_question_list' %}" class="menu-link">View Exam</a></button>
     </div>
   </div>
 </div>
