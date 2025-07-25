@@ -12,7 +12,28 @@
       color: #000;
       margin-bottom: 25px;
     }
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
 
+.table-header h3 {
+  font-size: 24px;
+  font-family: 'Urbanist';
+  font-weight: 600;
+}
+
+.add-btn {
+  background-color: #d9f274;
+  padding: 10px 18px;
+  color: #000;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-family: 'Urbanist';
+}
     table {
       width: 100%;
       border-collapse: collapse;

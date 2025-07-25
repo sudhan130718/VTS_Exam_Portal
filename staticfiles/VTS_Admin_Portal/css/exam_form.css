@@ -11,7 +11,7 @@
 .form-title {
   font-size: 26px;
   font-weight: 600;
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Urbanist';
   color: #333;
   margin-bottom: 20px;
   text-align: center;
@@ -62,7 +62,7 @@
 .question-list-container {
   padding: 20px;
   background-color: #f9f9f9;
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Urbanist';
 }
 
 .header {

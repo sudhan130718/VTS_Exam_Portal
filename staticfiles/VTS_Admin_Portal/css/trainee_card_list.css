@@ -44,12 +44,12 @@ h3 a:hover {
 .trainee-card-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 36px;
 }
 
 .trainee-card {
-  width: 347px;
-  height: 387px;
+  width: 280px;
+  height: 350px;
   background-color: #e7f7ab;
   border: 1px solid #263238;
   border-radius: 12px;
@@ -124,3 +124,10 @@ h3 a:hover {
   width: 16px;
   height: 16px;
 }
+
+
+
+
+
+
+

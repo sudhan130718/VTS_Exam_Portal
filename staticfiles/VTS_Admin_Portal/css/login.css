@@ -3,7 +3,7 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Urbanist';
   background: url('../images/Login Image.png') no-repeat center center fixed;
   background-size: cover;
   display: flex;

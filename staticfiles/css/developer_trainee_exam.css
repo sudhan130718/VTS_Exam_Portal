@@ -9,20 +9,20 @@
   align-items: center;
   background-color: #ffffff;
   border-radius: 8px;
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Urbanist';
 }
 
 /* Greeting */
 .greeting h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 600;
   color: #263238;
 }
 
 .greeting p {
   margin: 2px 0 0;
-  font-size: 14px;
+  font-size: 20px;
   color: #555;
 }
 
