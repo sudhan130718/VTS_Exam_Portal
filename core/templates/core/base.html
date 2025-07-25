@@ -27,7 +27,7 @@
       {% if user.role in 'admin' %}
       <a href="{% url 'admin_dashboard' %}" class="menu-link">
       <li>
-        <img src="{% static 'images/overview.png' %}" alt=""> Overview </li></a>
+        <img src="{% static 'images/Overview.png' %}" alt=""> Overview </li></a>
     
 
 
@@ -58,11 +58,11 @@
 
  
       <a href="{% url 'course_list' %}" class="menu-link">
-      <li><img src="{% static 'images/exam.png' %}" alt=""> Course</li></a>
+      <li><img src="{% static 'images/Exam.png' %}" alt=""> Course</li></a>
 
 <li class="has-submenu">
   <div class="menu-link">
-    <img src="{% static 'images/exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
+    <img src="{% static 'images/Exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
     Exams <i class="fas fa-chevron-down submenu-arrow"></i>
   </div>
   <ul class="submenu">
@@ -84,12 +84,12 @@
 
 <a href="{% url 'developer_trainee_dashboard' %}" class="menu-link">
       <li>
-        <img src="{% static 'images/overview.png' %}" alt=""> Overview </li></a>
+        <img src="{% static 'images/Overview.png' %}" alt=""> Overview </li></a>
 
        
 
         <a href="{% url 'developer_trainee_exam' %}" class="menu-link">
-        <li><img src="{% static 'images/exam.png' %}" alt=""> Exams</li></a>
+        <li><img src="{% static 'images/Exam.png' %}" alt=""> Exams</li></a>
         
       <a href="{% url 'developer_trainee_all_results' %}" class="menu-link">
       <li><img src="{% static 'images/result.png' %}" alt=""> Result</li></a>
@@ -104,7 +104,7 @@
 {% if user.role == 'developer' or user.role == 'designer' %}
 <a href="{% url 'developer_dashboard' %}" class="menu-link">
       <li>
-        <img src="{% static 'images/overview.png' %}" alt=""> Overview </li></a>
+        <img src="{% static 'images/Overview.png' %}" alt=""> Overview </li></a>
 
  <a href="{% url 'developer_trainee_card_view' %}" class="menu-link">
         <li><img src="{% static 'images/Design.png' %}" alt=""> Trainees</li></a>
@@ -112,7 +112,7 @@
 
         <li class="has-submenu">
   <div class="menu-link">
-    <img src="{% static 'images/exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
+    <img src="{% static 'images/Exam.png' %}" alt="">&nbsp;&nbsp;&nbsp;
     Exams <i class="fas fa-chevron-down submenu-arrow"></i>
   </div>
   <ul class="submenu">
