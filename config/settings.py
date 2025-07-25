@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 """
 
+import os
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -158,7 +159,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # used only in production
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type
