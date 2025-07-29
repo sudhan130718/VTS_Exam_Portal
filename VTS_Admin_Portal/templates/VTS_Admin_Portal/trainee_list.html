@@ -27,6 +27,7 @@
 
   <div class="search-box">
   <form method="get" action="{% url 'trainee_list' %}">
+    <input type="hidden" name="role" value="{{ selected_role }}">
     <input
       type="text"
       name="q"
@@ -62,12 +63,13 @@
 <div class="trainer-table-section">
   <div class="table-header">
     <h3>{{ title }} List</h3>
-
+{% if not search_query %}
 <button id="filterBtn" class="add-btn filter-btn" style="display: flex; flex-direction: row; gap: 15px; font-size: 16px;">
   <img src="{% static 'images/filter.png' %}" style="background-color: #ffffff;" alt="Filter Icon" />
   Filter
 </button>
     <a  href="{% url 'add_trainee' %}?role={{selected_role}}" class="add-btn">+ Add Trainee</a>
+    {% endif %}
   </div>
 
   <div class="table-responsive">
@@ -84,7 +86,7 @@
   font-size: 12px;     
   color: #666;         
   margin-top: 2px;
-  line-height: 1.2;">(in weaks)</span></th>
+  line-height: 1.2;">(in weeks)</span></th>
   <th>Date<span style="  display: block;
   font-size: 12px;     
   color: #666;         

@@ -16,8 +16,11 @@
     {% for trainee in trainees %}
     <div class="trainee-card">
       <div class="top-row">
-        <img src="{{ trainee.user.profile_image.url }}" alt="Trainee">
-        <div class="top-details">
+{% if trainee.user.profile_image %}
+  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee">
+{% else %}
+  <img src="{% static 'images/img 1.png' %}" alt="Default Profile">
+{% endif %}        <div class="top-details">
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
           <div class="action-icons">
             <a href="{% url 'edit_trainee' trainee.id %}?role={{selected_role}}" title="Edit">

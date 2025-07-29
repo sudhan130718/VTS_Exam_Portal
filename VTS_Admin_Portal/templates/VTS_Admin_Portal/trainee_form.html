@@ -22,8 +22,8 @@
           {{ field.label_tag }}
           {{ field }}
           {% if field.errors %}
-            <div class="error">{{ field.errors }}</div>
-          {% endif %}
+  <div class="error" id="{{ field.id_for_label }}-error">{{ field.errors }}</div>
+{% endif %}
         </div>
       {% endfor %}
     </div>

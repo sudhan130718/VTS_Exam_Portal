@@ -22,6 +22,7 @@
 
   <div class="search-box">
   <form method="get" action="{% url 'developer_list' %}">
+     <input type="hidden" name="role" value="{{ selected_role }}">
     <input
       type="text"
       name="t"
@@ -58,8 +59,10 @@
 <div class="trainer-table-section">
   <div class="table-header">
     <h3>{{ title }} List</h3>
-
+{% if not search_trainer %}
     <a  href="{% url 'add_trainer' %}?role={{title}}" class="add-btn">+ Add Trainer</a>
+     {% endif %}
+
   </div>
 
   <div class="table-responsive">

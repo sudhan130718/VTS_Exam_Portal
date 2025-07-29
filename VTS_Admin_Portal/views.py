@@ -257,63 +257,41 @@ def admin_logout(request):
 
 
 
-def developer_list_view(request):
-    role = request.GET.get('role', 'developer') 
 
-    search_trainer = request.GET.get('t', '')  
+def developer_list_view(request):
+    role = request.GET.get('role', 'developer')  # default to 'developer'
+    search_trainer = request.GET.get('t', '')    # search term from URL param ?t=
+
+    # Step 1: Filter by role and active status
     developers = Trainer.objects.filter(user__role=role, is_active=True)
 
     title_map = {
         'developer': 'Developer',
         'designer': 'Designer',
-       
     }
     title = title_map.get(role, 'Developer')
 
-    
+    # Step 2: Filter only the already-role-filtered queryset if search exists
     if search_trainer:
-     developers = Trainer.objects.all()
-     title = 'All Trainers'
+        developers = developers.filter(
+            Q(user__full_name__icontains=search_trainer) |
+            Q(user__email__icontains=search_trainer) |
+            Q(user__mobile__icontains=search_trainer)
+        )
+        title = 'Filtered Trainers'
 
-     developers = developers.filter(
-        Q(user__full_name__icontains=search_trainer) |
-        Q(user__email__icontains=search_trainer) |
-        Q(user__mobile__icontains=search_trainer)
-       
-    )
-
-
-    
     return render(request, 'VTS_Admin_Portal/developer_list.html', {
         'developers': developers,
         'selected_role': role,
-         'title': title,
-         'search_trainer':search_trainer,
+        'title': title,
+        'search_trainer': search_trainer,
     })
-
-
-# def trainer_form_view(request, trainer_id=None):
-#     instance = None
-#     if trainer_id:
-#         instance = get_object_or_404(Trainer, id=trainer_id)
-
-#     if request.method == 'POST':
-#         form = TrainerForm(request.POST, request.FILES, instance=instance)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('developer_list')  # or your trainer list page
-#     else:
-#         form = TrainerForm(instance=instance)
-
-#     return render(request, 'VTS_Admin_Portal/trainer_form.html', {
-#         'form': form,
-#         'is_edit': bool(instance),
-#     })
 
 def trainer_form_view(request, trainer_id=None):
     trainer = None
     user = None
     selected_role = request.GET.get('role')
+    
     trainers = Trainer.objects.all()
     course = Course.objects.all()
     print('trainers',trainers)
@@ -411,7 +389,8 @@ def trainer_form_view(request, trainer_id=None):
             })
             selected_role =user.role
         else:
-            form = TrainerUserForm()
+            form = TrainerUserForm(initial={'role': selected_role})
+           
             
 
     return render(request, 'VTS_Admin_Portal/trainer_form.html', {
@@ -475,7 +454,7 @@ def trainee_list_view(request):
 
 
     if search_query:
-      trainees = Trainee.objects.all()
+      
       title = 'All Trainees'
      
 
@@ -602,7 +581,7 @@ def trainee_form_view(request, trainee_id=None):
                 'is_active': trainee.is_active,
             })
         else:
-            form = TraineeUserForm()
+            form = TraineeUserForm(initial={'role': selected_role})
 
     return render(request, 'VTS_Admin_Portal/trainee_form.html', {
         'form': form,

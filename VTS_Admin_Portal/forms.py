@@ -28,6 +28,10 @@ User = apps.get_model(settings.AUTH_USER_MODEL)
 #                 'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;',
 #             })
 from django.core.exceptions import ValidationError
+import re
+
+
+            
 
 class TrainerUserForm(forms.Form):
     # USER FIELDS
@@ -35,7 +39,8 @@ class TrainerUserForm(forms.Form):
     email = forms.EmailField()
     mobile = forms.CharField(max_length=10)
     profile_image = forms.ImageField(required=False)
-    role = forms.ChoiceField(choices=User.ROLE_CHOICES)
+    # role = forms.ChoiceField(choices=User.ROLE_CHOICES)
+    role = forms.CharField(max_length=100, required=True)
 
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
@@ -45,17 +50,17 @@ class TrainerUserForm(forms.Form):
     # TRAINER FIELDS
     gender = forms.ChoiceField(choices=Trainer.GENDER_CHOICES)
     dob = forms.DateField(
-    input_formats=['%Y-%m-%d', '%Y/%m/%d'],  # Accept both formats
-    error_messages={'invalid': 'Enter a valid date in YYYY/MM/DD or YYYY-MM-DD format.'},
-    widget=forms.DateInput(
-        attrs={
-            'type': 'text',
-            'placeholder': 'YYYY/MM/DD',
-            'class': 'form-input',
-            'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;'
-        }
+        input_formats=['%Y-%m-%d', '%Y/%m/%d'],
+        error_messages={'invalid': 'Enter a valid date in YYYY/MM/DD or YYYY-MM-DD format.'},
+        widget=forms.DateInput(
+            attrs={
+                'type': 'text',
+                'placeholder': 'YYYY/MM/DD',
+                'class': 'form-input',
+                'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;',
+            }
+        )
     )
-)
     expertise_area = forms.ChoiceField(choices=Trainer.EXPERTISE_CHOICES)
     experience_years = forms.IntegerField()
     technical_languages = forms.CharField()
@@ -68,6 +73,7 @@ class TrainerUserForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['role'].widget.attrs['readonly'] = True
         for field in self.fields.values():
             field.widget.attrs.update({
                 'class': 'form-input',
@@ -76,20 +82,59 @@ class TrainerUserForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+
+        # ✅ Regex for basic email format validation
+        if not re.fullmatch(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
+            raise ValidationError("Enter a valid email address.")
+
+        # ✅ Check if email already exists (only if it changed)
         if self.initial.get('email') != email:
             if User.objects.filter(email=email).exists():
                 raise ValidationError("Email already exists.")
+
         return email
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm = cleaned_data.get("confirm_password")
+    # ✅ Mobile validation (10-digit numeric only)
+    def clean_mobile(self):
+        mobile = self.cleaned_data['mobile']
+        if not re.fullmatch(r'[6-9]\d{9}', mobile):
+            raise ValidationError("Enter a valid 10-digit mobile number starting with 6-9.")
+        return mobile
 
-        # Only validate if password is being set
-        if password or confirm:
-            if password != confirm:
-                raise ValidationError("Passwords do not match.")
+    # ✅ Postal code validation (6-digit Indian format)
+    def clean_postal_code(self):
+        postal = self.cleaned_data['postal_code']
+        if not re.fullmatch(r'\d{6}', postal):
+            raise ValidationError("Enter a valid 6-digit postal code.")
+        return postal
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if city and not re.fullmatch(r'[A-Za-z ]+', city):
+            raise ValidationError("City name should contain only letters and spaces.")
+        return city
+
+    def clean_state(self):
+        state = self.cleaned_data.get('state')
+        if state and not re.fullmatch(r'[A-Za-z ]+', state):
+            raise ValidationError("State name should contain only letters and spaces.")
+        return state
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if country and not re.fullmatch(r'[A-Za-z ]+', country):
+            raise ValidationError("Country name should contain only letters and spaces.")
+        return country
+
+    # ✅ Password confirmation validation
+    def clean(self):
+     cleaned_data = super().clean()
+     password = cleaned_data.get("password")
+     confirm = cleaned_data.get("confirm_password")
+     
+
+     if password and confirm and password != confirm:
+        self.add_error('confirm_password', "Passwords do not match.")     
             
 from django.db.models import Q
 
@@ -101,8 +146,7 @@ class TraineeUserForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
-    role = forms.ChoiceField(choices=User.ROLE_CHOICES)
-
+    role = forms.CharField(max_length=100, required=True)
     mobile = forms.CharField(max_length=10)
     profile_image = forms.ImageField(required=False)
 
@@ -136,6 +180,7 @@ class TraineeUserForm(forms.Form):
         super().__init__(*args, **kwargs)
 
 
+        self.fields['role'].widget.attrs['readonly'] = True
 
         from .models import Course, Trainer  # import here to avoid circular import
 
@@ -153,18 +198,59 @@ class TraineeUserForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists() and not self.initial.get('email') == email:
-            raise ValidationError("Email already exists.")
+
+        # ✅ Regex for basic email format validation
+        if not re.fullmatch(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
+            raise ValidationError("Enter a valid email address.")
+
+        # ✅ Check if email already exists (only if it changed)
+        if self.initial.get('email') != email:
+            if User.objects.filter(email=email).exists():
+                raise ValidationError("Email already exists.")
+
         return email
 
+    # ✅ Mobile validation (10-digit numeric only)
+    def clean_mobile(self):
+        mobile = self.cleaned_data['mobile']
+        if not re.fullmatch(r'[6-9]\d{9}', mobile):
+            raise ValidationError("Enter a valid 10-digit mobile number starting with 6-9.")
+        return mobile
+
+    # ✅ Postal code validation (6-digit Indian format)
+    def clean_postal_code(self):
+        postal = self.cleaned_data['postal_code']
+        if not re.fullmatch(r'\d{6}', postal):
+            raise ValidationError("Enter a valid 6-digit postal code.")
+        return postal
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if city and not re.fullmatch(r'[A-Za-z ]+', city):
+            raise ValidationError("City name should contain only letters and spaces.")
+        return city
+
+    def clean_state(self):
+        state = self.cleaned_data.get('state')
+        if state and not re.fullmatch(r'[A-Za-z ]+', state):
+            raise ValidationError("State name should contain only letters and spaces.")
+        return state
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if country and not re.fullmatch(r'[A-Za-z ]+', country):
+            raise ValidationError("Country name should contain only letters and spaces.")
+        return country
+
+    # ✅ Password confirmation validation
     def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm = cleaned_data.get("confirm_password")
-        if password or confirm:
-            if password != confirm:
-                raise ValidationError("Passwords do not match.")
-            
+      cleaned_data = super().clean()
+      password = cleaned_data.get("password")
+      confirm = cleaned_data.get("confirm_password")
+    
+
+      if password and confirm and password != confirm:
+        self.add_error('confirm_password', "Passwords do not match.")   
 
 
 class CourseForm(forms.ModelForm):
@@ -183,6 +269,22 @@ class CourseForm(forms.ModelForm):
                 },
                 format='%Y/%m/%d'
             ),
+             'description': forms.TextInput(  
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Enter course description'
+                }
+            ),
+            'duration_weeks': forms.TextInput(attrs={
+                'class': 'form-control',
+                'maxlength': '2',     # Allows 2 digits, like 12 weeks
+                'min': '1'
+            }),
+            'fee': forms.TextInput(attrs={
+                'class': 'form-control',
+                'maxlength': '6',     # Allows 6 digits, like 500000
+                'min': '1'
+            }),
          }
         
     def __init__(self, *args, **kwargs):

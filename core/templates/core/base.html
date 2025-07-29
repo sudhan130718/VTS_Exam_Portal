@@ -224,6 +224,31 @@
   });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Trainer form validation script loaded ✅");
+
+  document.querySelectorAll('.trainer-form input, .trainer-form select, .trainer-form textarea').forEach(field => {
+    // Trigger on input
+    field.addEventListener('input', () => {
+      const errorDiv = document.getElementById(field.id + '-error');
+      if (errorDiv) {
+        errorDiv.textContent = '';
+        console.log("Cleared error for:", field.id);
+      }
+    });
+
+    // Optional: also clear on focus (in case needed)
+    field.addEventListener('focus', () => {
+      const errorDiv = document.getElementById(field.id + '-error');
+      if (errorDiv) {
+        errorDiv.textContent = '';
+      }
+    });
+  });
+});
+</script>
+
 
 {% block extra_js %}{% endblock %}
 </body>
