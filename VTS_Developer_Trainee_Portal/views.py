@@ -31,6 +31,12 @@ def developer_trainee_exam(request):
         questions = PracticalQuestion.objects.filter(course=trainee.assigned_course ).order_by('-created_at')
 
 
+        trainee_exam_map = {}
+        for exam in exams:
+         trainee_exam = TraineeExam.objects.filter(trainee=trainee, exam=exam).first()
+         trainee_exam_map[exam.id] = trainee_exam
+
+
         if request.method == 'POST':
          question_id = request.POST.get('question_id')
          question = get_object_or_404(PracticalQuestion, id=question_id)
@@ -50,7 +56,8 @@ def developer_trainee_exam(request):
         'trainee': trainee,
         'exams': exams,
         'questions': questions,
-        'form': form
+        'form': form,
+        'trainee_exam_map': trainee_exam_map
         })
 
 def developer_trainee_start_exam(request, exam_id):
@@ -58,11 +65,12 @@ def developer_trainee_start_exam(request, exam_id):
         trainee = get_object_or_404(Trainee, user=request.user)
         trainee_exam, created = TraineeExam.objects.get_or_create(trainee=trainee, exam=exam)
         questions = exam.questions.all()
-    
+        exam_duration =exam.duration_minutes
+        print('exam_duration',exam_duration)
        
 
         return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_start_exam.html', {
-        'trainee': trainee,'questions': questions, 'trainee_exam': trainee_exam,'exam':exam
+        'trainee': trainee,'questions': questions, 'trainee_exam': trainee_exam,'exam':exam, 'exam_duration': exam_duration
         
         })
 
@@ -70,6 +78,8 @@ def developer_trainee_submit_exam(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id)
     trainee = request.user.trainee_profile
     trainee_exam = get_object_or_404(TraineeExam, trainee=trainee, exam=exam)
+
+    
 
     if trainee_exam.attended:
         messages.warning(request, "You have already submitted this exam.")

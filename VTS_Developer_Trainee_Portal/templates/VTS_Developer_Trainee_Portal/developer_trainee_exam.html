@@ -2,7 +2,7 @@
 
 {% extends 'core/base.html' %}
 {% load static %}
-
+{% load dict_extras %}  {# custom template filter we’ll add below #}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static '/css/developer_trainee_exam.css' %}">
 {% endblock %}
@@ -12,7 +12,7 @@
   <!-- Part 1: Greeting -->
   <div class="greeting">
     <div style="display: flex; gap: 10px;">
-    <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
+    <!-- <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/> -->
     <div style="margin-top: 20px;">
       <h3>{{ greeting }}!!!</h3>
   <p>It's {{ today|date:"l, d F Y" }}</p>
@@ -49,7 +49,21 @@
         <p class="exam-meta">Duration: {{ exam.duration_minutes }} minutes</p>
         <p class="exam-meta">Marks: {{ exam.total_marks }}</p>
       </div>
-      <button class="upload-btn"> <a href="{% url 'developer_trainee_start_exam' exam.id %}" class="menu-link">Start Exam</a></button>
+      
+            
+{% with trainee_exam=trainee_exam_map|get_item:exam.id %}
+      {% if trainee_exam and trainee_exam.attended %}
+        <button class="upload-btn" style="background-color: rgb(36, 33, 33);" disabled><a class="menu-link">Closed</a></button>
+        
+      {% else %}
+        <button class="upload-btn">
+          <a href="{% url 'developer_trainee_start_exam' exam.id %}" class="menu-link">Start Exam</a>
+        </button>
+       
+      {% endif %}
+    {% endwith %}
+
+    
     </div>
 {% endfor %}
 <div class="section-title-bar">

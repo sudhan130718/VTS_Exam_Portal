@@ -1,58 +1,144 @@
 {% extends 'core/base.html' %}
-
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static '/css/developer_trainee_start_exam.css' %}">
+<link rel="stylesheet" href="{% static 'css/developer_trainee_start_exam.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="admin-dashboard-header">
-  <!-- Part 1: Greeting -->
   <div class="greeting">
     <div style="display: flex; gap: 10px;">
-    <img src="{{trainee.user.profile_image.url }}" alt="User image" title="{{ request.user.full_name }}"/>
-    <div style="margin-top: 20px;">
-      <h3>{{ greeting }}!!!</h3>
-  <p>It's {{ today|date:"l, d F Y" }}</p>
-
-
-    </div>
+      <div style="margin-top: 20px;">
+        <h3>{{ greeting }}!!!</h3>
+        <p>It's {{ today|date:"l, d F Y" }}</p>
+      </div>
     </div>
   </div>
 
- 
-  <!-- Part 3: Notification & Login -->
   <div class="icon-group">
-    <!-- <div class="notification-icon">
-      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
-      <span class="badge">3</span>
-    </div> -->
     <div class="login-icon">
       <a href="{% url 'admin_logout' %}">
-      <img src="{% static 'images/logout.jpeg' %}" alt="User Login" title="logout"/>
+        <img src="{% static 'images/logout.jpeg' %}" alt="Logout" title="logout" />
       </a>
     </div>
   </div>
 </div>
 
 <div class="container mt-5">
-    <h2>{{ exam.title }}</h2>
-    <form method="POST" action="{% url 'developer_trainee_submit_exam' exam.id %}">
+  <h2>{{ exam.title }}</h2>
+  <div id="timer" style="font-size: 24px; color: red;"></div>
 
-        {% csrf_token %}
-        {% for question in questions %}
-            <div class="mb-4">
-                <p><strong>Q{{ forloop.counter }}. {{ question.question_text  }}</strong></p>
-                <div>
-                    <input type="radio" name="q{{ question.id }}" value="A" required> {{ question.option_a }}<br>
-                    <input type="radio" name="q{{ question.id }}" value="B"> {{ question.option_b }}<br>
-                    <input type="radio" name="q{{ question.id }}" value="C"> {{ question.option_c }}<br>
-                    <input type="radio" name="q{{ question.id }}" value="D"> {{ question.option_d }}
-                </div>
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-success">Submit Exam</button>
-    </form>
+  <form method="POST" id="examForm" action="{% url 'developer_trainee_submit_exam' exam.id %}">
+    {% csrf_token %}
+    {% for question in questions %}
+      <div class="mb-4">
+        <p><strong>Q{{ forloop.counter }}. {{ question.question_text }}</strong></p>
+        <div>
+          <input type="radio" name="q{{ question.id }}" value="A" required> {{ question.option_a }}<br>
+          <input type="radio" name="q{{ question.id }}" value="B"> {{ question.option_b }}<br>
+          <input type="radio" name="q{{ question.id }}" value="C"> {{ question.option_c }}<br>
+          <input type="radio" name="q{{ question.id }}" value="D"> {{ question.option_d }}
+        </div>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Submit Exam</button>
+  </form>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+ 
+  const examDurationMin = Number("{{ exam_duration|default:1 }}");
+  let duration = examDurationMin * 60;
+
+  const form = document.getElementById('examForm');
+  const timerDisplay = document.getElementById('timer');
+  let examSubmitted = false;
+  let countdownId = null;
+
+  // Render mm:ss
+  function renderTime(sec) {
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    timerDisplay.textContent = `Time Left: ${m}:${s}`;
+  }
+
+  // Submit helper (used by timeout / manual / navigation)
+  function submitExam(reason) {
+    if (examSubmitted) return;
+    examSubmitted = true;
+    // Allow normal form submit when we're still on the page
+    try { form.submit(); } catch(e) {}
+  }
+
+  // Auto submit at time up
+  function startTimer() {
+    renderTime(duration);
+    countdownId = setInterval(() => {
+      duration -= 1;
+      renderTime(duration);
+      if (duration <= 0) {
+        clearInterval(countdownId);
+        alert("Time's up! Your exam will be submitted automatically.");
+        submitExam('timeout');
+      }
+    }, 1000);
+  }
+
+  // Warn on reload/close/back; also try background submit
+  window.addEventListener('beforeunload', function (e) {
+    if (!examSubmitted) {
+      // Show browser default confirmation
+      e.preventDefault();
+      e.returnValue = '';
+
+      // Try to submit answers in background with sendBeacon
+      try {
+        const fd = new FormData(form);
+        const body = new URLSearchParams(fd).toString();
+        const blob = new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+        navigator.sendBeacon(form.action, blob);
+      } catch (err) {
+        // ignore
+      }
+    }
+  });
+
+  // Intercept internal link clicks to confirm and auto-submit
+  document.addEventListener('click', function (e) {
+    const a = e.target.closest('a');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href) return;
+
+    if (!examSubmitted) {
+      e.preventDefault();
+      const ok = confirm("Exam in progress. Leaving will submit your exam automatically. Continue?");
+      if (ok) {
+        // background submit
+        try {
+          const fd = new FormData(form);
+          const body = new URLSearchParams(fd).toString();
+          const blob = new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+          navigator.sendBeacon(form.action, blob);
+        } catch (err) {}
+        // then navigate
+        window.location.href = href;
+      }
+    }
+  });
+
+  // If user submits manually, mark as submitted to stop warnings
+  form.addEventListener('submit', function () {
+    examSubmitted = true;
+    if (countdownId) clearInterval(countdownId);
+  });
+
+  // Start the timer when page is ready
+  window.addEventListener('load', startTimer);
+</script>
+{% endblock %}
+
+
