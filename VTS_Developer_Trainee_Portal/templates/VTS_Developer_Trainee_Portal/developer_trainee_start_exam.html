@@ -26,6 +26,9 @@
 </div>
 
 <div class="container mt-5">
+  <!-- <video hidden id="webcam" autoplay playsinline width="320" height="240" style="border: 2px solid #000;"></video> -->
+<video id="video" width="320" height="240" autoplay muted></video>
+<canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
   <h2>{{ exam.title }}</h2>
   <div id="timer" style="font-size: 24px; color: red;"></div>
 
@@ -139,6 +142,52 @@
   // Start the timer when page is ready
   window.addEventListener('load', startTimer);
 </script>
+
+<!-- <script>
+  const video = document.getElementById('webcam');
+
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+    } catch (error) {
+      alert("Camera access denied or not available.");
+      console.error("Camera error:", error);
+    }
+  }
+
+  window.onload = startCamera;
+</script> -->
+<script>
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // Start camera
+  navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+    video.srcObject = stream;
+  });
+
+  function captureAndSendImage() {
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    let dataUrl = canvas.toDataURL("image/jpeg");
+
+    
+
+    fetch("/save-snapshot/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ image: dataUrl }),
+    });
+  }
+
+  // Take snapshot every 30 seconds
+  setInterval(captureAndSendImage, 30000);
+</script>
+
 {% endblock %}
 
 

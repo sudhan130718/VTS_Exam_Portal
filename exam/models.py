@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Exam(models.Model):
     course = models.ForeignKey('VTS_Admin_Portal.Course', on_delete=models.CASCADE, related_name='exams')
@@ -33,6 +34,8 @@ class TraineeExam(models.Model):
     attended = models.BooleanField(default=False)
     score = models.PositiveIntegerField(null=True, blank=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
+    image = models.ImageField(upload_to='trainee_exam_images/', default='images/default.jpg')
+    timestamp = models.DateTimeField(default=timezone.now)
 
     class Meta:
         unique_together = ('trainee', 'exam')

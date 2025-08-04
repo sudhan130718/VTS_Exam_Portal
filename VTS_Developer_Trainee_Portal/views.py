@@ -74,10 +74,32 @@ def developer_trainee_start_exam(request, exam_id):
         
         })
 
+import base64
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.base import ContentFile
+
 def developer_trainee_submit_exam(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id)
     trainee = request.user.trainee_profile
     trainee_exam = get_object_or_404(TraineeExam, trainee=trainee, exam=exam)
+
+    if request.method == "POST":
+        import json
+        image_data = request.POST.get("image")
+        print("Raw request.body:", image_data)
+
+        # data = json.loads(request.body)
+        # image_data = data.get("image")
+
+       
+
+        
+        if image_data:
+            format, imgstr = image_data.split(';base64,') 
+            ext = format.split('/')[-1]  
+            file_data = ContentFile(base64.b64decode(imgstr), name=f"snapshot.{ext}")
+            
+            TraineeExam.objects.create(image=file_data)
 
     
 

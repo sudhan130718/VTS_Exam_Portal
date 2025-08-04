@@ -98,6 +98,7 @@
                 <th>Score</th>
                 <th>Total Marks</th>
                 <th>Submitted At</th>
+                <th>Exam_image</th>
             </tr>
         </thead>
         <tbody>
@@ -108,6 +109,9 @@
                     <td>{{ result.score }}</td>
                     <td>{{ result.exam.total_marks }}</td>
                     <td>{{ result.submitted_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+  <img src="{{ result.image.url }}" alt="Snapshot" style="width: 50px; height: 50px;" />
+</td>
                 </tr>
             {% empty %}
                 <tr><td colspan="5">No results found.</td></tr>
