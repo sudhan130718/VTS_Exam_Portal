@@ -60,7 +60,7 @@
   <div class="table-header">
     <h3>{{ title }} List</h3>
 {% if not search_trainer %}
-    <a  href="{% url 'add_trainer' %}?role={{title}}" class="add-btn">+ Add Trainer</a>
+    <a  href="{% url 'add_trainer' %}?role={{selected_role}}" class="add-btn">+ Add Trainer</a>
      {% endif %}
 
   </div>

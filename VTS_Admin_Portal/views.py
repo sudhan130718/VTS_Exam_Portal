@@ -260,6 +260,7 @@ def admin_logout(request):
 
 def developer_list_view(request):
     role = request.GET.get('role', 'developer')  # default to 'developer'
+    print('role_name', role)
     search_trainer = request.GET.get('t', '')    # search term from URL param ?t=
 
     # Step 1: Filter by role and active status
@@ -270,6 +271,7 @@ def developer_list_view(request):
         'designer': 'Designer',
     }
     title = title_map.get(role, 'Developer')
+    print('title_name', title)
 
     # Step 2: Filter only the already-role-filtered queryset if search exists
     if search_trainer:
