@@ -126,8 +126,8 @@
           </td>
           <td>
             <a  href="{% url 'edit_trainee' trainee.id %}?role={{selected_role}}"  title="Edit">
-              <i class="fas fa-edit action-icon" style="color: rgb(130, 110, 245);"></i>
-            </a>
+              <i class="fas fa-edit action-icon" style="color: rgb(130, 110, 245);"></i></a>
+            
             
 
             <a href="{% url 'delete_trainee' trainee.id %}?role={{selected_role}}"
@@ -149,19 +149,23 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2 style="margin-bottom: 20px;">Filter by</h2>
+    <hr>
 
     <form method="get" action="{% url 'trainee_card_view' %}">
-      <div class="form-group">
-        <label for="class_mode">Class Mode</label>
-       <select name="class_mode" id="class_mode">
-  <option value="">-- Select --</option>
-  <option value="online" {% if selected_class_mode == 'online' %}selected{% endif %}>Online</option>
-  <option value="offline" {% if selected_class_mode == 'offline' %}selected{% endif %}>Offline</option>
-</select>
-      </div>
 
       <div class="form-group">
-        <label for="course">Course</label>
+       <label for="trainer">Trainer Name</label>
+<select name="trainer" id="trainer">
+  <option value="" disabled selected>__Select a Trainer__</option>
+  {% for t in trainers %}
+    <option value="{{ t.id }}" {% if t.id|stringformat:"s" == selected_trainer_id %}selected{% endif %}>{{ t.user.full_name }}</option>
+  {% endfor %}
+</select>
+      </div>
+      
+
+      <div class="form-group">
+        <label for="course">Course Name</label>
         <select name="course" id="course">
   <option value="" disabled selected>__Select a Course__</option>
   {% for c in course %}
@@ -170,22 +174,39 @@
 </select>
       </div>
 
+      
+
       <div class="form-group">
-       <label for="trainer">Trainer</label>
-<select name="trainer" id="trainer">
-  <option value="" disabled selected>__Select a Trainer__</option>
-  {% for t in trainers %}
-    <option value="{{ t.id }}" {% if t.id|stringformat:"s" == selected_trainer_id %}selected{% endif %}>{{ t.user.full_name }}</option>
-  {% endfor %}
-</select>
+         <label for="duration">Durations (in weeks)</label>
+  <input 
+    type="number" 
+    name="duration" 
+    id="duration" 
+    min="1" 
+    placeholder="Enter number of weeks"
+    value="{{ selected_duration }}"
+  />
       </div>
 
-      <!-- <div class="form-group">
-        <label for="duration">Duration (weeks)</label>
-        <input type="number" name="duration" id="duration" min="1" placeholder="Enter number of weeks" />
-      </div> -->
+      <div class="form-group">
+       
+<label>Class Mode</label>
+<div class="radio-group">
+  <label class="radio-option">
+    <input type="radio" name="class_mode" value="online" {% if selected_class_mode == 'online' %}checked{% endif %}>
+    Online
+  </label>
 
-      <button type="submit" class="submit-btn">Apply Filters</button>
+  <label class="radio-option">
+    <input type="radio" name="class_mode" value="offline" {% if selected_class_mode == 'offline' %}checked{% endif %}>
+    Offline
+  </label>
+</div>
+
+      </div>
+<div class="modal_submit">
+      <button type="submit" class="submit-btn">Submit</button>
+      </div>
     </form>
   </div>
 </div>

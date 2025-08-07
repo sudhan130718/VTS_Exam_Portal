@@ -61,29 +61,78 @@ def submit_exam(request, exam_id):
     return render(request, 'exam/result.html', {'score': score, 'total': exam.questions.count()})
 
 
-from django.db.models import Q
+# from django.db.models import Q
 
-def exam_result_list(request):
-    results = TraineeExam.objects.select_related('trainee__user', 'exam').all().order_by('-submitted_at')
-    exam_id = request.GET.get('exam_id')
-    print("exam_id",exam_id)
-    if exam_id:
-        results = results.filter(exam__id=exam_id)
+# def exam_result_list(request):
+#     results = TraineeExam.objects.select_related('trainee__user', 'exam').all().order_by('-submitted_at')
+#     exam_id = request.GET.get('exam_id')
+#     print("exam_id",exam_id)
+#     if exam_id:
+#         results = results.filter(exam__id=exam_id)
 
-    search_result = request.GET.get('r', '')
-    if search_result:
-     results = results
+#     search_result = request.GET.get('r', '')
+#     if search_result:
+#      results = results
      
 
-     results = results.filter(
-        Q(trainee__user__full_name__icontains=search_result) |
-        Q(submitted_at__icontains=search_result) |
-        Q(exam__title__icontains=search_result)
+#      results = results.filter(
+#         Q(trainee__user__full_name__icontains=search_result) |
+#         Q(submitted_at__icontains=search_result) |
+#         Q(exam__title__icontains=search_result)
          
  
        
-    )
-    return render(request, 'exam/exam_result_list.html', {'results': results})
+#     )
+#     return render(request, 'exam/exam_result_list.html', {'results': results})
+
+
+from django.db.models import Q, Max, Sum
+from .models import TraineeExam
+
+def exam_result_list(request):
+    exam_id = request.GET.get('exam_id')
+    search_result = request.GET.get('r', '')
+
+    results = TraineeExam.objects.select_related('trainee__user', 'exam')
+
+    # Filter by exam ID if provided
+    if exam_id:
+        results = results.filter(exam__id=exam_id)
+
+    # Filter by search query if provided
+    if search_result:
+        results = results.filter(
+            Q(trainee__user__full_name__icontains=search_result) |
+            Q(submitted_at__icontains=search_result) |
+            Q(exam__title__icontains=search_result)
+        )
+
+    # If no filter/search, get only latest submitted result per trainee
+    if not (exam_id or search_result):
+        latest_submissions = (
+            TraineeExam.objects.values('trainee_id')
+            .annotate(latest_date=Max('submitted_at'))
+        )
+
+        latest_dates = [entry['latest_date'] for entry in latest_submissions]
+        results = results.filter(submitted_at__in=latest_dates)
+
+    results = results.order_by('-submitted_at')
+
+    # ---- Card Stats ----
+    total_trainees = results.values('trainee_id').distinct().count()
+    total_marks = results.aggregate(total=Sum('exam__total_marks'))['total'] or 0
+    present_count = results.exclude(score=None).count()
+    absent_count = results.filter(score=None).count()
+
+    return render(request, 'exam/exam_result_list.html', {
+        'results': results,
+        'total_trainees': total_trainees,
+        'total_marks': total_marks,
+        'present_count': present_count,
+        'absent_count': absent_count,
+    })
+
 
 
 

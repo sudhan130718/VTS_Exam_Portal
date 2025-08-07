@@ -5,6 +5,8 @@ from exam.models import PracticalQuestion
 from .models import Course, Trainee, Trainer
 from django.conf import settings
 from django.apps import apps
+from django.forms import HiddenInput
+
 
 User = apps.get_model(settings.AUTH_USER_MODEL)
 
@@ -38,12 +40,29 @@ class TrainerUserForm(forms.Form):
     full_name = forms.CharField(max_length=100)
     email = forms.EmailField()
     mobile = forms.CharField(max_length=10)
-    profile_image = forms.ImageField(required=False)
+    profile_image = forms.ImageField(
+    required=True,
+    error_messages={'required': 'Profile photo is required.'})
+
+    # profile_image = forms.ImageField(required=False)
     # role = forms.ChoiceField(choices=User.ROLE_CHOICES)
     role = forms.CharField(max_length=100, required=True)
 
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    # password = forms.CharField(widget=forms.PasswordInput, required=False)
+    # confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    password = forms.CharField(
+    widget=forms.PasswordInput,
+    required=True,
+    min_length=6,
+    error_messages={'required': 'Password is required.'})
+    confirm_password = forms.CharField(
+    widget=forms.PasswordInput,
+    required=True,
+    error_messages={'required': 'Confirm password is required.'})
+
+
+
+
     is_staff = forms.BooleanField(required=False, initial=False)
     is_active = forms.BooleanField(required=False, initial=True)
 
@@ -73,7 +92,29 @@ class TrainerUserForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         self.fields['role'].widget.attrs['readonly'] = True
+
+        if  kwargs.get('initial') :
+         self.fields['password'].required = False
+         self.fields['confirm_password'].required = False
+         self.fields['profile_image'].required = False
+         self.fields['password'].widget.attrs['readonly'] = True
+         self.fields['confirm_password'].widget.attrs['readonly'] = True
+
+
+
+        #  self.fields['password'].widget = HiddenInput()
+
+        #  self.fields['confirm_password'].widget = HiddenInput()
+
+
+
+
+        
+
+        
+            
         for field in self.fields.values():
             field.widget.attrs.update({
                 'class': 'form-input',
@@ -81,18 +122,24 @@ class TrainerUserForm(forms.Form):
             })
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+     email = self.cleaned_data['email']
+     common_domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com']
+    
+     if not re.fullmatch(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
+        raise ValidationError("Enter a valid email address.")
+    
+     domain = email.split('@')[-1]
+     if self.initial.get('email') != email:
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email already exists.")
+    
+     if domain not in common_domains:
+        raise ValidationError("Please enter an email with a valid domain (e.g., gmail.com).")
 
-        # ✅ Regex for basic email format validation
-        if not re.fullmatch(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
-            raise ValidationError("Enter a valid email address.")
+     return email
+    
+    
 
-        # ✅ Check if email already exists (only if it changed)
-        if self.initial.get('email') != email:
-            if User.objects.filter(email=email).exists():
-                raise ValidationError("Email already exists.")
-
-        return email
 
     # ✅ Mobile validation (10-digit numeric only)
     def clean_mobile(self):
@@ -134,7 +181,17 @@ class TrainerUserForm(forms.Form):
      
 
      if password and confirm and password != confirm:
-        self.add_error('confirm_password', "Passwords do not match.")     
+        self.add_error('confirm_password', "Passwords do not match.") 
+
+     if password:
+      if len(password) < 6:
+            self.add_error('password', 'Password must be at least 6 characters long.')
+      elif not re.search(r'[A-Z]', password):
+            self.add_error('password', 'Password must include at least one uppercase letter.')
+      elif not re.search(r'[a-z]', password):
+            self.add_error('password', 'Password must include at least one lowercase letter.')
+      elif not re.search(r'\d', password):
+            self.add_error('password', 'Password must include at least one digit.')    
             
 from django.db.models import Q
 
@@ -265,7 +322,8 @@ class CourseForm(forms.ModelForm):
                 attrs={
                     'type': 'text',  # important: type text so Flatpickr can override
                     'placeholder': 'yyyy/mm/dd',
-                    'class': 'form-control'
+                    'class': 'form-control',
+                    'readonly': 'readonly',
                 },
                 format='%Y/%m/%d'
             ),

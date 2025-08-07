@@ -70,7 +70,7 @@ h3 a:hover {
 .top-row img {
   width: 60px;
   height: 60px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   object-fit: cover;
 }
 
@@ -87,12 +87,22 @@ h3 a:hover {
   color: #263238;
 }
 
-.action-icons img {
-  width: 18px;
-  height: 18px;
-  margin-left: 10px;
+
+
+.action-icon {
+  width: 18px !important;
+  height: 18px !important;
   cursor: pointer;
-}
+  border-radius: none !important;
+ object-fit: contain;       /* Ensures full image fits */
+  vertical-align: middle;    /* Aligns properly with text */
+  display: inline-block;     /* Prevent inline-img quirks */}
+
+ 
+
+
+
+
 
 .middle-info {
   margin-left: 20px;
@@ -123,6 +133,18 @@ h3 a:hover {
 .bottom-info .icon {
   width: 16px;
   height: 16px;
+}
+
+#view_more{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view_more{
+  background-color: #263238;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 

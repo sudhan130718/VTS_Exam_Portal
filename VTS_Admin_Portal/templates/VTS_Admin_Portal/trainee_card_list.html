@@ -24,11 +24,11 @@
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
           <div class="action-icons">
             <a href="{% url 'edit_trainee' trainee.id %}?role={{selected_role}}" title="Edit">
-               <i class="fas fa-edit action-icon" style="color: rgb(130, 110, 245);"></i>
-            </a>&nbsp;
-            <a href="{% url 'delete_trainee' trainee.id %}?role={{selected_role}}" title="Delete" onclick="return confirm('Are you sure?');">
-              <i class="fas fa-trash-alt action-icon" style="color: rgb(244, 74, 74);"></i>
+            <img src="{% static 'images/edit.png' %}" alt="Edit" class="action-icon edit-icon">
             </a>
+            <!-- <a href="{% url 'delete_trainee' trainee.id %}?role={{selected_role}}" title="Delete" onclick="return confirm('Are you sure?');">
+              <i class="fas fa-trash-alt action-icon" style="color: rgb(244, 74, 74);"></i>
+            </a> -->
           </div>
         </div>
       </div>
@@ -40,9 +40,15 @@
       </div>
 
       <div class="bottom-info">
-        <p><i class="fas fa-envelope action-icon" style="color: rgb(224, 130, 53);"></i> {{ trainee.user.email }}</p>
-        <p><i class="fas fa-phone-alt action-icon" style="color: rgb(134, 112, 196);"></i> {{ trainee.user.mobile }}</p>
+        <p>            <img src="{% static 'images/Mail id.png' %}" alt="Edit" class="action-icon edit-icon">
+{{ trainee.user.email }}</p>
+        <p>            <img src="{% static 'images/Phone.png' %}" alt="Edit" class="action-icon edit-icon">
+ {{ trainee.user.mobile }}</p>
+       <div id="view_more">
+        <button class="view_more">View more</button>
       </div>
+      </div>
+     
     </div>
     {% empty %}
       <p>No trainees found.</p>

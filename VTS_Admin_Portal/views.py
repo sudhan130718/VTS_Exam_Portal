@@ -315,9 +315,16 @@ def trainer_form_view(request, trainer_id=None):
                 user.role = form.cleaned_data['role']
                 user.is_staff = form.cleaned_data.get('is_staff', False)
                 user.is_active = form.cleaned_data.get('is_active', True)
-                if form.cleaned_data.get('password'):
-                    user.set_password(form.cleaned_data['password'])
-                user.save()
+                # if form.cleaned_data.get('password'):
+                #     user.set_password(form.cleaned_data['password'])
+                # user.save()
+
+                password = request.POST.get('password')
+                if password:
+                 user.set_password(password)  # Only update if not empty
+
+                 user.save()
+                
 
                 trainer.gender = form.cleaned_data['gender']
                 trainer.dob = form.cleaned_data['dob']
@@ -423,18 +430,20 @@ def trainee_card_view(request):
     selected_class_mode = request.GET.get('class_mode')
     selected_course_id = request.GET.get('course')
     selected_trainer_id = request.GET.get('trainer')
-
+    selected_duration = request.GET.get('duration')
     # Base queryset
 
     # Apply filters
     if selected_class_mode:
         trainees = trainees.filter(class_mode=selected_class_mode)
+    if selected_duration:
+        trainees = trainees.filter(assigned_course__duration_weeks=selected_duration)
     if selected_course_id:
         trainees = trainees.filter(assigned_course_id=selected_course_id)
     if selected_trainer_id:
         trainees = trainees.filter(assigned_trainer_id=selected_trainer_id)
     return render(request, 'VTS_Admin_Portal/trainee_card_list.html', {'trainees': trainees,'selected_class_mode': selected_class_mode,
-        'selected_course_id': selected_course_id,
+        'selected_course_id': selected_course_id,'selected_duration': selected_duration,
         'selected_trainer_id': selected_trainer_id,'selected_role':role,})
 
 from django.db.models import Q
@@ -458,6 +467,8 @@ def trainee_list_view(request):
     if search_query:
       
       title = 'All Trainees'
+      trainees = Trainee.objects.all()
+
      
 
       trainees = trainees.filter(

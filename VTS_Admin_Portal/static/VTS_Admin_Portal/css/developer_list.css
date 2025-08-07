@@ -101,14 +101,20 @@
   }
 }
 
-
+.modal_submit{
+  display: flex;
+  justify-content: center;
+}
 .modal {
   display: none;
   position: fixed;
-  top: 239px;
+
+opacity: 1;
+
+  top: 200px;
   left: 599px;
   width: 532px;
-  height: 675px;
+  height: 438px;
   background-color: white;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   padding: 30px;
@@ -146,13 +152,33 @@
   border: 1px solid #ccc;
   border-radius: 6px;
 }
+ .radio-group {
+    display: block;
+    align-items: center;
+    margin-top: 8px;
+  }
 
-.submit-btn {
-  background-color: #131313;
+  .radio-option {
+    display: block;
+    align-items: center;
+    gap: 8px; /* spacing between radio button and label */
+    font-family: Urbanist;
+    font-size: 16px;
+    color: #131313;
+  }
+
+  input[type="radio"] {
+    accent-color: #000; /* optional: color of selected radio */
+    width: 16px;
+    height: 16px;
+  }
+.submit-btn {  
+  background-color: #D8F275;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 6px;
   cursor: pointer;
+  text-align: center;
 }
