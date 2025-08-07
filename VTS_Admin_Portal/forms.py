@@ -40,25 +40,34 @@ class TrainerUserForm(forms.Form):
     full_name = forms.CharField(max_length=100)
     email = forms.EmailField()
     mobile = forms.CharField(max_length=10)
-    profile_image = forms.ImageField(
-    required=True,
-    error_messages={'required': 'Profile photo is required.'})
+    # profile_image = forms.ImageField(
+    # required=True,
+    # error_messages={'required': 'Profile photo is required.'})
 
-    # profile_image = forms.ImageField(required=False)
+    profile_image = forms.ImageField(required=False)
     # role = forms.ChoiceField(choices=User.ROLE_CHOICES)
     role = forms.CharField(max_length=100, required=True)
 
-    # password = forms.CharField(widget=forms.PasswordInput, required=False)
-    # confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    # password = forms.CharField(widget=forms.PasswordInput, required=False, readonly=True)
+    # confirm_password = forms.CharField(widget=forms.PasswordInput, required=False, readonly=True)
     password = forms.CharField(
-    widget=forms.PasswordInput,
-    required=True,
-    min_length=6,
-    error_messages={'required': 'Password is required.'})
+    widget=forms.PasswordInput(attrs={'readonly': 'readonly'}),
+    required=False
+)
     confirm_password = forms.CharField(
-    widget=forms.PasswordInput,
-    required=True,
-    error_messages={'required': 'Confirm password is required.'})
+    widget=forms.PasswordInput(attrs={'readonly': 'readonly'}),
+    required=False
+)
+        
+    # password = forms.CharField(
+    # widget=forms.PasswordInput,
+    # required=True,
+    # min_length=6,
+    # error_messages={'required': 'Password is required.'})
+    # confirm_password = forms.CharField(
+    # widget=forms.PasswordInput,
+    # required=True,
+    # error_messages={'required': 'Confirm password is required.'})
 
 
 
@@ -95,12 +104,12 @@ class TrainerUserForm(forms.Form):
         
         self.fields['role'].widget.attrs['readonly'] = True
 
-        if  kwargs.get('initial') :
-         self.fields['password'].required = False
-         self.fields['confirm_password'].required = False
-         self.fields['profile_image'].required = False
-         self.fields['password'].widget.attrs['readonly'] = True
-         self.fields['confirm_password'].widget.attrs['readonly'] = True
+        if not kwargs.get('initial') or not kwargs['initial'].get('email'):
+         self.fields['password'].required = True
+         self.fields['confirm_password'].required = True
+         self.fields['profile_image'].required = True
+         self.fields['password'].widget.attrs['readonly'] = False
+         self.fields['confirm_password'].widget.attrs['readonly'] = False
 
 
 
