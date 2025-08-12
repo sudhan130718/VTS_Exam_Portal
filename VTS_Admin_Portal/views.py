@@ -665,6 +665,7 @@ def add_course(request):
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
+   
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
@@ -672,7 +673,15 @@ def edit_course(request, course_id):
             return redirect('course_list')
     else:
         form = CourseForm(instance=course)
+    form.fields['start_date'].widget.attrs['value'] = course.start_date.strftime('%Y/%m/%d') if course.start_date else ''
+        
+
     return render(request, 'VTS_Admin_Portal/course_form.html', {'form': form, 'title': 'Edit Course','is_edit': bool(course)})
+
+
+
+
+
 
 def delete_course(request, pk):
     course = get_object_or_404(Course, pk=pk)

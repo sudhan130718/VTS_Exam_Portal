@@ -11,7 +11,9 @@ class ExamForm(forms.ModelForm):
                 attrs={
                     'type': 'text',  # important: type text so Flatpickr can override
                     'placeholder': 'yyyy/mm/dd',
-                    'class': 'form-control'
+                    'class': 'form-control',
+
+                    'readonly': 'readonly',
                 },
                 format='%Y/%m/%d'
             ),
