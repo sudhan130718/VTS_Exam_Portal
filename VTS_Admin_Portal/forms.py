@@ -96,7 +96,7 @@ class TrainerUserForm(forms.Form):
     address_line2 = forms.CharField()
     city = forms.CharField()
     state = forms.CharField()
-    postal_code = forms.CharField()
+    postal_code = forms.CharField(max_length=6)
     country = forms.CharField(initial='India')
 
     def __init__(self, *args, **kwargs):
@@ -237,7 +237,7 @@ class TraineeUserForm(forms.Form):
     address_line2 = forms.CharField()
     city = forms.CharField()
     state = forms.CharField()
-    postal_code = forms.CharField()
+    postal_code = forms.CharField(max_length=6)
     country = forms.CharField(initial='India')
 
     

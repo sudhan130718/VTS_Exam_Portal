@@ -293,42 +293,45 @@ def trainer_form_view(request, trainer_id=None):
     trainer = None
     user = None
     selected_role = request.GET.get('role')
-    
+
     trainers = Trainer.objects.all()
     course = Course.objects.all()
-    print('trainers',trainers)
 
     if trainer_id:
         trainer = get_object_or_404(Trainer, id=trainer_id)
         user = trainer.user
 
     if request.method == 'POST':
-        form = TrainerUserForm(request.POST, request.FILES, initial={'email': user.email} if user else None)
+        form = TrainerUserForm(
+            request.POST,
+            request.FILES,
+            initial={'email': user.email} if user else None
+        )
+
         if form.is_valid():
             if trainer:
-                # Edit existing
+                # Update User
                 user.full_name = form.cleaned_data['full_name']
                 user.email = form.cleaned_data['email']
                 user.mobile = form.cleaned_data['mobile']
-                if form.cleaned_data.get('profile_image'):
-                    user.profile_image = form.cleaned_data['profile_image']
+
+                # Fix for profile image update
+                if 'profile_image' in request.FILES:
+                    user.profile_image = request.FILES['profile_image']
+
                 user.role = form.cleaned_data['role']
                 user.is_staff = form.cleaned_data.get('is_staff', False)
                 user.is_active = form.cleaned_data.get('is_active', True)
-                # if form.cleaned_data.get('password'):
-                #     user.set_password(form.cleaned_data['password'])
-                # user.save()
 
-                password = request.POST.get('password')
+                password = form.cleaned_data.get('password')
                 if password:
-                 user.set_password(password)  # Only update if not empty
+                    user.set_password(password)
 
-                 user.save()
-                
+                user.save()
 
+                # Update Trainer
                 trainer.gender = form.cleaned_data['gender']
                 trainer.dob = form.cleaned_data['dob']
-               
                 trainer.expertise_area = form.cleaned_data['expertise_area']
                 trainer.experience_years = form.cleaned_data['experience_years']
                 trainer.technical_languages = form.cleaned_data['technical_languages']
@@ -340,10 +343,11 @@ def trainer_form_view(request, trainer_id=None):
                 trainer.country = form.cleaned_data['country']
                 trainer.is_active = form.cleaned_data['is_active']
                 trainer.save()
-                selected_role =user.role
+
+                selected_role = user.role
 
             else:
-                # Create new
+                # Create New
                 user = User.objects.create_user(
                     email=form.cleaned_data['email'],
                     password=form.cleaned_data['password'],
@@ -353,7 +357,8 @@ def trainer_form_view(request, trainer_id=None):
                     is_active=form.cleaned_data.get('is_active', True),
                 )
                 user.mobile = form.cleaned_data['mobile']
-                user.profile_image = form.cleaned_data.get('profile_image')
+                if 'profile_image' in request.FILES:
+                    user.profile_image = request.FILES['profile_image']
                 user.save()
 
                 Trainer.objects.create(
@@ -373,6 +378,7 @@ def trainer_form_view(request, trainer_id=None):
                 )
 
             return HttpResponseRedirect(f"{reverse('developer_list')}?role={selected_role}")
+
     else:
         if trainer:
             form = TrainerUserForm(initial={
@@ -395,21 +401,21 @@ def trainer_form_view(request, trainer_id=None):
                 'postal_code': trainer.postal_code,
                 'country': trainer.country,
                 'is_active': trainer.is_active,
+                'password': '',
+                'confirm_password': ''
             })
-            selected_role =user.role
+            selected_role = user.role
         else:
             form = TrainerUserForm(initial={'role': selected_role})
-           
-            
 
     return render(request, 'VTS_Admin_Portal/trainer_form.html', {
         'form': form,
         'is_edit': bool(trainer),
         'selected_role': selected_role,
-        'trainers':trainers,
-        'course':course
-
+        'trainers': trainers,
+        'course': course
     })
+
 
 def trainer_delete_view(request, trainer_id):
     trainer = get_object_or_404(Trainer, id=trainer_id)
