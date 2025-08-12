@@ -416,7 +416,6 @@ def trainer_form_view(request, trainer_id=None):
         'course': course
     })
 
-
 def trainer_delete_view(request, trainer_id):
     trainer = get_object_or_404(Trainer, id=trainer_id)
     user = trainer.user  
@@ -494,8 +493,6 @@ def trainee_list_view(request):
         'course':course})
 
 
-
-
 def trainee_form_view(request, trainee_id=None):
     trainee = None
     user = None
@@ -504,34 +501,47 @@ def trainee_form_view(request, trainee_id=None):
     if trainee_id:
         trainee = get_object_or_404(Trainee, id=trainee_id)
         user = trainee.user
-        selected_role = trainee.user.role
+        selected_role = user.role
 
     if request.method == 'POST':
-        form = TraineeUserForm(request.POST, request.FILES, initial={'email': user.email} if user else None)
+        form = TraineeUserForm(
+            request.POST,
+            request.FILES,
+            initial={'email': user.email} if user else None
+        )
+
         if form.is_valid():
             assigned_course = form.cleaned_data['assigned_course']
-            assigned_trainer = assigned_course.trainer  # Auto-get trainer
+            assigned_trainer = assigned_course.trainer  # Auto-fill trainer
             start_date = assigned_course.start_date
 
             if trainee:
-                # Edit
+                # -------- Edit Existing --------
                 user.full_name = form.cleaned_data['full_name']
                 user.email = form.cleaned_data['email']
                 user.mobile = form.cleaned_data['mobile']
-                if form.cleaned_data.get('profile_image'):
-                    user.profile_image = form.cleaned_data['profile_image']
+
+                # Fix for profile image update
+                if 'profile_image' in request.FILES:
+                    user.profile_image = request.FILES['profile_image']
+
                 user.role = form.cleaned_data['role']
-                user.is_staff = form.cleaned_data.get('is_staff', False)
-                user.is_active = form.cleaned_data.get('is_active', True)
-                if form.cleaned_data.get('password'):
-                    user.set_password(form.cleaned_data['password'])
+                # user.is_staff = form.cleaned_data.get('is_staff', False)
+                # user.is_active = form.cleaned_data.get('is_active', True)
+
+                # Only change password if provided
+                password = form.cleaned_data.get('password')
+                if password:
+                    user.set_password(password)
+
                 user.save()
 
+                # Update Trainee fields
                 trainee.gender = form.cleaned_data['gender']
                 trainee.dob = form.cleaned_data['dob']
                 trainee.class_mode = form.cleaned_data['class_mode']
                 trainee.assigned_course = assigned_course
-                trainee.assigned_trainer = assigned_trainer  # auto-filled
+                trainee.assigned_trainer = assigned_trainer
                 trainee.start_date = start_date
                 trainee.address_line1 = form.cleaned_data['address_line1']
                 trainee.address_line2 = form.cleaned_data['address_line2']
@@ -539,11 +549,11 @@ def trainee_form_view(request, trainee_id=None):
                 trainee.state = form.cleaned_data['state']
                 trainee.postal_code = form.cleaned_data['postal_code']
                 trainee.country = form.cleaned_data['country']
-                # trainee.is_active = form.cleaned_data['is_active']
+                trainee.is_active = form.cleaned_data.get('is_active', True)
                 trainee.save()
 
             else:
-                # Create
+                # -------- Create New --------
                 user = User.objects.create_user(
                     email=form.cleaned_data['email'],
                     password=form.cleaned_data['password'],
@@ -553,7 +563,8 @@ def trainee_form_view(request, trainee_id=None):
                     # is_active=form.cleaned_data.get('is_active', True),
                 )
                 user.mobile = form.cleaned_data['mobile']
-                user.profile_image = form.cleaned_data.get('profile_image')
+                if 'profile_image' in request.FILES:
+                    user.profile_image = request.FILES['profile_image']
                 user.save()
 
                 Trainee.objects.create(
@@ -562,7 +573,7 @@ def trainee_form_view(request, trainee_id=None):
                     dob=form.cleaned_data['dob'],
                     class_mode=form.cleaned_data['class_mode'],
                     assigned_course=assigned_course,
-                    assigned_trainer=assigned_trainer,  # auto-filled
+                    assigned_trainer=assigned_trainer,
                     start_date=start_date,
                     address_line1=form.cleaned_data['address_line1'],
                     address_line2=form.cleaned_data['address_line2'],
@@ -570,11 +581,13 @@ def trainee_form_view(request, trainee_id=None):
                     state=form.cleaned_data['state'],
                     postal_code=form.cleaned_data['postal_code'],
                     country=form.cleaned_data['country'],
-                    # is_active=form.cleaned_data['is_active'],
+                    is_active=form.cleaned_data.get('is_active', True),
                 )
 
             return redirect(f"{reverse('trainee_list')}?role={user.role}")
+
     else:
+        # -------- Initial Data for Form --------
         if trainee:
             form = TraineeUserForm(initial={
                 'full_name': user.full_name,
@@ -584,13 +597,12 @@ def trainee_form_view(request, trainee_id=None):
                 'role': user.role,
                 # 'is_staff': user.is_staff,
                 # 'is_active': user.is_active,
-
                 'gender': trainee.gender,
-                'dob': trainee.dob.strftime('%Y/%m/%d') if trainee.dob else '',
+                'dob': trainee.dob,
                 'class_mode': trainee.class_mode,
                 'assigned_course': trainee.assigned_course,
                 # 'assigned_trainer': trainee.assigned_trainer,  # Not needed in form
-                # 'start_date': trainee.start_date.strftime('%Y/%m/%d') if trainee.start_date else '',
+                # 'start_date': trainee.start_date,
                 'address_line1': trainee.address_line1,
                 'address_line2': trainee.address_line2,
                 'city': trainee.city,
@@ -598,6 +610,8 @@ def trainee_form_view(request, trainee_id=None):
                 'postal_code': trainee.postal_code,
                 'country': trainee.country,
                 'is_active': trainee.is_active,
+                'password': '',
+                'confirm_password': ''
             })
         else:
             form = TraineeUserForm(initial={'role': selected_role})
@@ -608,6 +622,9 @@ def trainee_form_view(request, trainee_id=None):
         'trainee': trainee,
         'selected_role': selected_role
     })
+
+
+
 
 
 def trainee_delete_view(request, trainee_id):

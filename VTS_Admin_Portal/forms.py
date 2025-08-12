@@ -210,28 +210,32 @@ class TraineeUserForm(forms.Form):
     # User fields
     full_name = forms.CharField(max_length=100)
     email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'readonly': 'readonly'}),
+        required=False
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'readonly': 'readonly'}),
+        required=False
+    )
     role = forms.CharField(max_length=100, required=True)
     mobile = forms.CharField(max_length=10)
     profile_image = forms.ImageField(required=False)
 
-    # is_staff = forms.BooleanField(required=False, initial=False)
-    # is_active = forms.BooleanField(required=False, initial=True)
-
     # Trainee fields
     gender = forms.ChoiceField(choices=Trainee.GENDER_CHOICES)
     dob = forms.DateField(
-        input_formats=['%Y/%m/%d'],
-        widget=forms.DateInput(attrs={'type': 'text', 'placeholder': 'yyyy/mm/dd'})
+        input_formats=['%Y-%m-%d', '%Y/%m/%d'],
+        error_messages={'invalid': 'Enter a valid date in YYYY/MM/DD or YYYY-MM-DD format.'},
+        widget=forms.DateInput(attrs={
+            'type': 'text',
+            'placeholder': 'YYYY/MM/DD',
+            'class': 'form-input',
+            'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;',
+        })
     )
     class_mode = forms.ChoiceField(choices=Trainee.CLASS_MODE_CHOICES)
-    assigned_course = forms.ModelChoiceField(queryset=None, required=False)
-    # assigned_trainer = forms.ModelChoiceField(queryset=None, required=False)
-    # start_date = forms.DateField(
-    #     input_formats=['%Y/%m/%d'],
-    #     widget=forms.DateInput(attrs={'type': 'text', 'placeholder': 'yyyy/mm/dd'})
-    # )
+    assigned_course = forms.ModelChoiceField(queryset=None, required=True)
 
     address_line1 = forms.CharField()
     address_line2 = forms.CharField()
@@ -240,22 +244,24 @@ class TraineeUserForm(forms.Form):
     postal_code = forms.CharField(max_length=6)
     country = forms.CharField(initial='India')
 
-    
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-
         self.fields['role'].widget.attrs['readonly'] = True
 
-        from .models import Course, Trainer  # import here to avoid circular import
-
-
+        from .models import Course
         self.fields['assigned_course'].queryset = Course.objects.all()
-        # self.fields['assigned_trainer'].queryset = Trainer.objects.all()
 
-        
+        # ADD vs EDIT detection
+        if not kwargs.get('initial') or not kwargs['initial'].get('email'):
+            # ADD mode → Require password, confirm, profile image
+            self.fields['password'].required = True
+            self.fields['confirm_password'].required = True
+            self.fields['profile_image'].required = True
+            self.fields['password'].widget.attrs['readonly'] = False
+            self.fields['confirm_password'].widget.attrs['readonly'] = False
 
+        # Style all fields
         for field in self.fields.values():
             field.widget.attrs.update({
                 'class': 'form-input',
@@ -264,26 +270,27 @@ class TraineeUserForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        common_domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com']
 
-        # ✅ Regex for basic email format validation
         if not re.fullmatch(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
             raise ValidationError("Enter a valid email address.")
 
-        # ✅ Check if email already exists (only if it changed)
+        domain = email.split('@')[-1]
         if self.initial.get('email') != email:
             if User.objects.filter(email=email).exists():
                 raise ValidationError("Email already exists.")
 
+        if domain not in common_domains:
+            raise ValidationError("Please enter an email with a valid domain (e.g., gmail.com).")
+
         return email
 
-    # ✅ Mobile validation (10-digit numeric only)
     def clean_mobile(self):
         mobile = self.cleaned_data['mobile']
         if not re.fullmatch(r'[6-9]\d{9}', mobile):
             raise ValidationError("Enter a valid 10-digit mobile number starting with 6-9.")
         return mobile
 
-    # ✅ Postal code validation (6-digit Indian format)
     def clean_postal_code(self):
         postal = self.cleaned_data['postal_code']
         if not re.fullmatch(r'\d{6}', postal):
@@ -308,15 +315,25 @@ class TraineeUserForm(forms.Form):
             raise ValidationError("Country name should contain only letters and spaces.")
         return country
 
-    # ✅ Password confirmation validation
     def clean(self):
-      cleaned_data = super().clean()
-      password = cleaned_data.get("password")
-      confirm = cleaned_data.get("confirm_password")
-    
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm = cleaned_data.get("confirm_password")
 
-      if password and confirm and password != confirm:
-        self.add_error('confirm_password', "Passwords do not match.")   
+        # Password confirmation check
+        if password and confirm and password != confirm:
+            self.add_error('confirm_password', "Passwords do not match.")
+
+        # Password strength check
+        if password:
+            if len(password) < 6:
+                self.add_error('password', 'Password must be at least 6 characters long.')
+            elif not re.search(r'[A-Z]', password):
+                self.add_error('password', 'Password must include at least one uppercase letter.')
+            elif not re.search(r'[a-z]', password):
+                self.add_error('password', 'Password must include at least one lowercase letter.')
+            elif not re.search(r'\d', password):
+                self.add_error('password', 'Password must include at least one digit.')
 
 
 class CourseForm(forms.ModelForm):
