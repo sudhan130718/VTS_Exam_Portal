@@ -252,6 +252,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+<script>
+function openTraineeModal(name, gender, dob, classMode, course, trainer, startDate, endDate, address, status, dateJoined, imageUrl) {
+    document.getElementById('modalName').innerText = name;
+    document.getElementById('modalGender').innerText = gender;
+    document.getElementById('modalDob').innerText = dob;
+    document.getElementById('modalClassMode').innerText = classMode;
+    document.getElementById('modalCourse').innerText = course;
+    document.getElementById('modalTrainer').innerText = trainer;
+    document.getElementById('modalStartDate').innerText = startDate;
+    document.getElementById('modalEndDate').innerText = endDate || 'N/A';
+    document.getElementById('modalAddress').innerText = address;
+    document.getElementById('modalStatus').innerText = status;
+    // document.getElementById('modalDateJoined').innerText = dateJoined;
+    document.getElementById('modalImage').src = imageUrl;
+
+    document.getElementById("traineeModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("traineeModal").style.display = "none";
+}
+
+</script>
 
 
 {% block extra_js %}{% endblock %}

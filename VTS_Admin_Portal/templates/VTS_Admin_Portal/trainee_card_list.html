@@ -45,7 +45,28 @@
         <p>            <img src="{% static 'images/Phone.png' %}" alt="Edit" class="action-icon edit-icon">
  {{ trainee.user.mobile }}</p>
        <div id="view_more">
-        <button class="view_more">View more</button>
+      
+        <button 
+    class="view_more" 
+    onclick="openTraineeModal(
+        '{{ trainee.user.full_name }}',
+        '{{ trainee.get_gender_display }}',
+        '{{ trainee.dob }}',
+        '{{ trainee.get_class_mode_display }}',
+        '{{ trainee.assigned_course }}',
+        '{{ trainee.assigned_trainer }}',
+        '{{ trainee.start_date }}',
+        '{{ trainee.end_date }}',
+        '{{ trainee.address_line1 }} {{ trainee.address_line2 }}, {{ trainee.city }}, {{ trainee.state }}, {{ trainee.postal_code }}, {{ trainee.country }}',
+        '{{ trainee.is_active }}',
+        '{{ trainee.date_joined }}',
+        '{{ trainee.user.profile_image.url }}'
+    )">
+    View more
+</button>  
+
+
+
       </div>
       </div>
      
@@ -55,4 +76,64 @@
     {% endfor %}
   </div>
 </div>
+
+
+<div id="traineeModal" class="modal" >
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="profile-pic">
+      <img id="modalImage" src="" alt="Trainee Image">
+    </div>
+    <div class="trainee-info">
+      <h2 id="modalName"></h2>
+      <table class="trainee-table">
+    <tbody>
+      <tr>
+        <td>Gender</td>
+        <td id="modalGender"></td>
+      </tr>
+      <tr>
+        <td>Date of Birth</td>
+        <td id="modalDob"></td>
+      </tr>
+      <tr>
+        <td>Class Mode</td>
+        <td id="modalClassMode"></td>
+      </tr>
+      <tr>
+        <td>Assigned Course</td>
+        <td id="modalCourse"></td>
+      </tr>
+      <tr>
+        <td>Assigned Trainer</td>
+        <td id="modalTrainer"></td>
+      </tr>
+      <tr>
+        <td>Start Date</td>
+        <td id="modalStartDate"></td>
+      </tr>
+      <tr>
+        <td>End Date</td>
+        <td id="modalEndDate"></td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td id="modalAddress"></td>
+      </tr>
+      <tr>
+        <td>Is Active</td>
+        <td id="modalStatus"></td>
+      </tr>
+      <!-- <tr>
+        <td>Date Joined</td>
+        <td id="modalDateJoined"></td>
+      </tr> -->
+    </tbody>
+  </table>
+    </div>
+  </div>
+</div>
+
+
+
 {% endblock %}
