@@ -16,7 +16,8 @@ html, body {
 /* Sidebar */
 .sidebar {
   width: 243px;
-  background: #263238;
+  /* background: #263238; */
+  background-color: #3d484e;
   color: #ffffff;
   
   box-sizing: border-box;
@@ -237,19 +238,21 @@ color: #d9f274;
   height: 43px;
   border: 2px solid #000000;
   border-radius: 8px;
-  background: #f2f2f2;
+  background: #ffffff;
   box-sizing: border-box;
   color: #000000;
 }
 
 .search-box input {
-  width: 100%;
-  padding: 20px 45px 8px 10px;
+  width: 98%;
+  padding: 20px 45px 16px 5px;
   border: none;
   outline: none;
-  background: transparent;
+  background-color: #ffffff !important;
   font-size: 14px;
-  height: 100%;
+      height: 90%;
+    margin-top: 16px;
+    margin-left: 5px;
 }
 
 .search-icon {
@@ -264,7 +267,7 @@ color: #d9f274;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+ 
 }
 
 .search-icon img {
@@ -328,3 +331,10 @@ color: #d9f274;
   to { opacity: 1; transform: translateY(0); }
 }
 
+input[type="text"], 
+textarea, 
+select, 
+input::placeholder, 
+textarea::placeholder {
+  font-family: Urbanist, sans-serif;
+}

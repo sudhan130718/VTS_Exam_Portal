@@ -29,7 +29,7 @@
 }
 
 /* Search Box */
-.search-box {
+.search-box-dash {
   position: relative;
   display: flex;
   align-items: center;
@@ -37,19 +37,21 @@
   height: 43px;
   border: 2px solid #000000;
   border-radius: 8px;
-  background: #f2f2f2;
+  background: #ffffff;
   box-sizing: border-box;
   color: #000000;
 }
 
-.search-box input {
-  width: 100%;
-  padding: 20px 45px 8px 10px;
+.search-box-dash input {
+  width: 98%;
+  padding: 20px 45px 16px 5px;
   border: none;
   outline: none;
   background: transparent;
   font-size: 14px;
-  height: 100%;
+  height: 90%;
+  margin-top: 16px;
+  margin-left: 5px;
 }
 
 .search-icon {
@@ -64,7 +66,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+ 
 }
 
 .search-icon img {
@@ -356,7 +358,7 @@
     max-width: 100%;
   }
 
-  .search-box {
+  .search-box-dash {
     width: 100%;
   }
 }
@@ -469,7 +471,7 @@ form input[type="file"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 20px;
+  padding: 10px 20px;
 }
 
 .upload-box {
@@ -481,18 +483,18 @@ form input[type="file"] {
   border: 2px dashed #2563EB;
   border-radius: 8px;
   text-align: center;
-  padding: 30px 20px;
+  padding: 10px 20px;
   color: #000;
   box-sizing: border-box;
 }
 
 .upload-icon {
-  font-size: 40px;
-  margin-bottom: 20px;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .upload-text {
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   margin-bottom: 10px;
   color: #7c7d80;
 }
@@ -538,6 +540,7 @@ form input[type="file"] {
   font-size: 18px;
   font-weight: 600;
   color: #111827; /* Dark heading */
-  text-align: center;
+  /* text-align: center; */
+  margin-left: 46px;
 
 }

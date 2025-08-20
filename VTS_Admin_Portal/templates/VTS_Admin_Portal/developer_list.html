@@ -24,7 +24,7 @@
   <form method="get" action="{% url 'developer_list' %}">
      <input type="hidden" name="role" value="{{ selected_role }}">
     <input
-      type="text"
+      type="text" autocomplete="off"
       name="t"
       placeholder="Search Trainers..."
       value="{{ search_trainer }}"

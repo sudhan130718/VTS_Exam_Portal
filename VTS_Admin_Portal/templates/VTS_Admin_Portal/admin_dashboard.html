@@ -14,26 +14,27 @@
 </div>
 
   <!-- Part 2: Search Box -->
-  <!-- <div class="search-box">
-    <input type="text" placeholder="Search Trainees..." />
-    <div class="search-icon">
-      <img src="{% static 'images/search.png' %}" alt="Search Icon" />
-    </div>
-  </div> -->
 
-  <div class="search-box">
+  
+ 
+
+  <div class="search-box-dash">
   <form method="get" action="{% url 'trainee_list' %}">
+    <input type="hidden" name="role" value="{{ selected_role }}">
+
+    <!-- search input -->
     <input
       type="text"
       name="q"
+      autocomplete="off"
       placeholder="Search Trainees..."
       value="{{ search_query }}"
     />
-    
-    <!-- Keep the role as hidden so it's not lost on search -->
 
+    <!-- keep your design wrapper -->
     <div class="search-icon">
-      <button type="submit" style="background: none; border: none;">
+      <button type="submit" 
+              style="background: none; border: none; cursor: pointer; padding: 0;">
         <img src="{% static 'images/search.png' %}" alt="Search Icon" />
       </button>
     </div>
@@ -117,7 +118,9 @@
         <p class="trainer-name">{{ dev.user.full_name }}</p>
         <p class="trainer-role">{{ dev.expertise_area }}</p>
       </div>
-      <div class="trainee-count">{{ dev.trainees.count }} Trainees</div>
+      <!-- <div class="trainee-count">{{ dev.trainees.count }} Trainees</div> -->
+             <button class="add-new-btn" style="background-color: #ffffff; color: #000; margin-right: 96px;"> <a href=""  class="menu-link"> {{ dev.trainees.count }} Trainees</a></button>
+
     </div>
 {% endfor %}
     
@@ -126,7 +129,7 @@
 <div class="recent-exams-section">
   <!-- Section Header -->
   <div class="section-title-bar">
-    <h4>Recent Exams</h4>
+    <h4>Upcoming Exams</h4>
     <a href="{% url 'exam_list' %}" class="view-all-link">View All</a>
   </div>
 
@@ -156,29 +159,25 @@
 </div>
 
 <!-- Upload Box Section -->
- 
-    
-    <div class="upload-section"  >
-  <h4 class="upload-heading" >Upload Question Paper</h4>
-  </div>
-  
-<div class="upload-container" >
-  
-
-  <div class="upload-box" >
-    <!-- <div class="upload-icon">
-      📤
-    </div> -->
-    <div class="upload-icon">
-  <i class="fas fa-upload"></i>
+<div class="upload-section">
+  <h4 class="upload-heading">Upload Question Paper</h4>
 </div>
 
+<div class="upload-container">
+  <div class="upload-box">
+    <div class="upload-icon">
+      <i class="fas fa-upload"></i>
+    </div>
     <p class="upload-text">Drag and Drop your files here</p>
     <p class="or-text">or</p>
     <label for="file-upload" id="upload-btn">Browse Files</label>
     <input id="file-upload" type="file" hidden />
     <p class="upload-info">Supported formats: PDF, DOCX, DOC (Max 10MB)</p>
+      <!-- File status section -->
+  <div id="file-status" style="margin-top: 10px; font-size:14px; color:#333;"></div>
   </div>
+
+
 </div>
 
 

@@ -24,8 +24,9 @@
   <div class="search-box">
   <form method="get" action="{% url 'exam_list' %}">
     <input
-      type="text"
-      name="e"
+      type="text" autocomplete="off"
+      
+      name="e" 
       placeholder="Course / YYYY-MM-DD"
       value="{{ search_exam }}"
     

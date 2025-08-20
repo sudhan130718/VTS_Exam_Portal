@@ -29,7 +29,8 @@
   <form method="get" action="{% url 'course_list' %}">
     <input
       type="text"
-      name="c"
+       autocomplete="off"
+      name="c" 
       placeholder="Search Course..."
       value="{{ search_course }}"
     />

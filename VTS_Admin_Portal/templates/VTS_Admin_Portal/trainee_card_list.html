@@ -17,12 +17,12 @@
     <div class="trainee-card">
       <div class="top-row">
 {% if trainee.user.profile_image %}
-  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee">
+  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 50px; height: 50px; margin-left: 16px;">
 {% else %}
-  <img src="{% static 'images/img 1.png' %}" alt="Default Profile">
+  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 50px; height: 50px; margin-left: 16px;">
 {% endif %}        <div class="top-details">
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
-          <div class="action-icons">
+          <div class="action-icons" style="margin-top: -42px;">
             <a href="{% url 'edit_trainee' trainee.id %}?role={{selected_role}}" title="Edit">
             <img src="{% static 'images/edit.png' %}" alt="Edit" class="action-icon edit-icon">
             </a>
@@ -40,11 +40,11 @@
       </div>
 
       <div class="bottom-info">
-        <p>            <img src="{% static 'images/Mail id.png' %}" alt="Edit" class="action-icon edit-icon">
+        <p style="margin-left: 22px;">            <img src="{% static 'images/Mail id.png' %}" alt="Edit" class="action-icon edit-icon">
 {{ trainee.user.email }}</p>
-        <p>            <img src="{% static 'images/Phone.png' %}" alt="Edit" class="action-icon edit-icon">
+        <p style="margin-left: 22px;">            <img src="{% static 'images/Phone.png' %}" alt="Edit" class="action-icon edit-icon">
  {{ trainee.user.mobile }}</p>
-       <div id="view_more">
+       <div id="view_more" style="margin-top: -38px;">
       
         <button 
     class="view_more" 
@@ -61,7 +61,7 @@
         '{{ trainee.is_active }}',
         '{{ trainee.date_joined }}',
         '{{ trainee.user.profile_image.url }}'
-    )">
+    )" >
     View more
 </button>  
 
