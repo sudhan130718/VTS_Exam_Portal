@@ -12,6 +12,7 @@
 .result-table th{
   background-color: #263238;
   color: #fff;
+  font-size: 20px;
 }
 .result-table tr{
   background-color: #d9f274;
@@ -93,7 +94,7 @@
   <div class="search-box">
   <form method="get" action="{% url 'exam_result_list' %}">
     <input
-      type="text"
+      type="text" autocomplete="off"
       name="r"
       placeholder=" Name/title/YYYY-MM-DD"
       value="{{ search_result }}"
@@ -158,7 +159,7 @@
                 <th>Exam</th>
                 
                 <th>Total Marks</th>
-                <th>Score</th>
+                <th>Obtained Marks</th>
                 <!-- <th>Submitted At</th> -->
                 <!-- <th>Exam_image</th> -->
             </tr>

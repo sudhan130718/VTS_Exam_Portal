@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from VTS_Admin_Portal.models import Trainee
 from .models import Exam, ExamQuestion, TraineeExam, TraineeAnswer
 from .forms import ExamForm, ExamQuestionForm
 from django.utils import timezone
@@ -91,6 +93,7 @@ from .models import TraineeExam
 
 def exam_result_list(request):
     exam_id = request.GET.get('exam_id')
+   
     search_result = request.GET.get('r', '')
 
     results = TraineeExam.objects.select_related('trainee__user', 'exam')
@@ -98,6 +101,12 @@ def exam_result_list(request):
     # Filter by exam ID if provided
     if exam_id:
         results = results.filter(exam__id=exam_id)
+        exam = Exam.objects.get(id=exam_id)  # now it's a model instance
+        
+        trainees = Trainee.objects.filter(assigned_course=exam.course)
+        trainees_count = trainees.count()  
+
+        
 
     # Filter by search query if provided
     if search_result:
@@ -120,10 +129,13 @@ def exam_result_list(request):
     results = results.order_by('-submitted_at')
 
     # ---- Card Stats ----
-    total_trainees = results.values('trainee_id').distinct().count()
-    total_marks = results.aggregate(total=Sum('exam__total_marks'))['total'] or 0
+    # total_trainees = results.values('trainee_id').distinct().count()
+    total_trainees =trainees_count
+    # total_marks = results.aggregate(total=Sum('exam__total_marks'))['total'] or 0
+    total_marks =exam.total_marks
     present_count = results.exclude(score=None).count()
-    absent_count = results.filter(score=None).count()
+    # absent_count = results.filter(score=None).count()
+    absent_count =total_trainees-present_count
 
     return render(request, 'exam/exam_result_list.html', {
         'results': results,
