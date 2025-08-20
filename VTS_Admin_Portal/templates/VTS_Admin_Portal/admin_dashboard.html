@@ -119,7 +119,7 @@
         <p class="trainer-role">{{ dev.expertise_area }}</p>
       </div>
       <!-- <div class="trainee-count">{{ dev.trainees.count }} Trainees</div> -->
-             <button class="add-new-btn" style="background-color: #ffffff; color: #000; margin-right: 96px;"> <a href=""  class="menu-link"> {{ dev.trainees.count }} Trainees</a></button>
+             <button class="add-new-btn" style="background-color: #ffffff; color: #000; margin-right: 96px;pointer-events: none;"> <a href=""  class="menu-link"> {{ dev.trainees.count }} Trainees</a></button>
 
     </div>
 {% endfor %}
@@ -166,7 +166,8 @@
 <div class="upload-container">
   <div class="upload-box">
     <div class="upload-icon">
-      <i class="fas fa-upload"></i>
+      <!-- <i class="fas fa-upload"></i> -->
+        <img src="{% static 'images/upload.png' %}" alt="Upload Icon" style="width: 60px; height: 40px;"/>
     </div>
     <p class="upload-text">Drag and Drop your files here</p>
     <p class="or-text">or</p>
