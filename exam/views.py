@@ -93,6 +93,10 @@ from .models import TraineeExam
 
 def exam_result_list(request):
     exam_id = request.GET.get('exam_id')
+    total_trainees =0
+    total_marks =0
+    present_count = 0
+    absent_count =0
    
     search_result = request.GET.get('r', '')
 
@@ -105,6 +109,10 @@ def exam_result_list(request):
         
         trainees = Trainee.objects.filter(assigned_course=exam.course)
         trainees_count = trainees.count()  
+        total_trainees =trainees_count
+        total_marks =exam.total_marks
+        present_count = results.exclude(score=None).count()
+        absent_count =total_trainees-present_count
 
         
 
@@ -127,15 +135,16 @@ def exam_result_list(request):
         results = results.filter(submitted_at__in=latest_dates)
 
     results = results.order_by('-submitted_at')
+    print("Result", results)
 
     # ---- Card Stats ----
     # total_trainees = results.values('trainee_id').distinct().count()
-    total_trainees =trainees_count
+    
     # total_marks = results.aggregate(total=Sum('exam__total_marks'))['total'] or 0
-    total_marks =exam.total_marks
-    present_count = results.exclude(score=None).count()
+    
+    
     # absent_count = results.filter(score=None).count()
-    absent_count =total_trainees-present_count
+    
 
     return render(request, 'exam/exam_result_list.html', {
         'results': results,
