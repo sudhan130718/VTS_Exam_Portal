@@ -67,9 +67,14 @@
 
       <div class="table-header">
     <h3>Practical Questions</h3>
-    {% if request.user.role not in 'developer designer' %}
-  <button class="add-new-btn" id="openModalBtn"> + Add New</button>
-{% endif %}
+    {% if request.user.role not in 'admin' %} 
+
+      <button class="add-new-btn" id="openModalBtn"> + Add New</button>
+      {% endif %}
+
+    <!-- {% if request.user.role not in 'developer designer' %} -->
+  <!-- <button class="add-new-btn" id="openModalBtn"> + Add New</button> -->
+<!-- {% endif %} -->
   </div>
    
     {% if messages %}
@@ -85,7 +90,10 @@
           <th>Title</th>
           <th>Question</th>
           <th>Answer</th>
-          <th>Actions</th>
+          {% if request.user.role not in 'admin' %} 
+
+          <th>Actions</th>    {% endif %}
+
         </tr>
       </thead>
       <tbody>
@@ -105,13 +113,16 @@
    View Answer
 </a>      
 </td>
+{% if request.user.role not in 'admin' %} 
+
           <td>
             <form method="post" action="{% url 'delete_practical_question' question.pk %}" style="display:inline;">
               {% csrf_token %}
               <button type="submit" class="action-btn" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
             </form>
            
-          </td>
+          </td>{% endif %}
+
         </tr>
         {% empty %}
         <tr>

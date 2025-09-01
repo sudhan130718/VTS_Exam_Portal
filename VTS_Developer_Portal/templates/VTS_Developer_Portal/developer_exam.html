@@ -5,6 +5,60 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="admin-dashboard-header">
+  <!-- Part 1: Greeting -->
+ <div class="greeting">
+  <h3>{{ greeting }}!!!</h3>
+  <p>It's {{ today|date:"l, d F Y" }}</p>
+</div>
+
+  <!-- Part 2: Search Box -->
+  <!-- <div class="search-box">
+    <input type="text" placeholder="Search Trainees..." />
+    <div class="search-icon">
+      <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+    </div>
+  </div> -->
+
+  <div class="search-box">
+  <form method="get" action="{% url 'developer_exam' %}">
+    <input
+      type="text" autocomplete="off"
+      
+      name="e" 
+      placeholder="Trainer/Course/Y-M-D"
+      value="{{ search_exam }}"
+    
+
+    />
+    
+    <!-- Keep the role as hidden so it's not lost on search -->
+
+    <div class="search-icon">
+      <button type="submit" style="background: none; border: none;">
+        <img src="{% static 'images/search.png' %}" alt="Search Icon" />
+      </button>
+    </div>
+  </form>
+  <!-- <span style="top: 10px; font-size: 10px; left: 10px;">Search by Course, Date(YYYY-MM-DD)</span> -->
+
+</div>
+
+
+  <!-- Part 3: Notification & Login -->
+  <div class="icon-group">
+    <!-- <div class="notification-icon">
+      <img src="{% static 'images/notifi.jpg' %}" alt="Notifications" />
+      <span class="badge">3</span>
+    </div> -->
+    <div class="login-icon">
+      <a href="{% url 'admin_logout' %}">
+      <img src="{% static 'images/logout.jpeg' %}" alt="User Login" title="logout"/>
+      </a>
+    </div>
+  </div>
+</div>
 <div class="exam-table-container">
   <div class="table-header">
     <h3>Exam List</h3>
@@ -14,6 +68,7 @@
     <table class="exam-table">
       <thead>
         <tr>
+          <th>Trainer</th>
           <th>Title</th>
           <th>Course</th>
           <th>Date</th>
@@ -27,18 +82,22 @@
       <tbody>
         {% for exam in exams %}
         <tr>
+                    <td>{{ exam.course.trainer }}</td>
+
           <td>{{ exam.title }}</td>
           <td>{{ exam.course.name }}</td>
           <td>{{ exam.date }}</td>
           <td>{{ exam.start_time }}</td>
           <td>{{ exam.duration_minutes }}</td>
           <td>{{ exam.total_marks }}</td>
-          <td><a href="{% url 'developer_result' %}?role={{ exam.title|urlencode }}" class="submit-btn">view Result</a></td>
-          <td class="action-icons">
-           
-        
-        
-        </td>
+<td>
+  <a href="{% url 'developer_result' %}?role={{ exam.title|urlencode }}&exam_id={{ exam.id }}" 
+     class="submit-btn">
+     View Result
+  </a>
+</td>
+
+          
         </tr>
         {% empty %}
         <tr><td colspan="7">No exams available.</td></tr>

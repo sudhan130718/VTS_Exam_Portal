@@ -88,7 +88,11 @@ def developer_trainee_dashboard(request):
 
 
 def exam_list(request):
-    exams = Exam.objects.all().order_by('-date')  
+    trainer = Trainer.objects.get(user=request.user) 
+    courses = Course.objects.filter(trainer=trainer)
+
+    exams = Exam.objects.filter(course__in=courses).order_by('-id')
+    # exams = Exam.objects.all().order_by('-date')
 
     search_exam = request.GET.get('e', '') 
     if search_exam:
@@ -98,6 +102,8 @@ def exam_list(request):
     Q(date__icontains=search_exam) |
     Q(title__icontains=search_exam)
      )
+
+    
      
 
     

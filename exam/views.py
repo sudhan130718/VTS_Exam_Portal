@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from VTS_Admin_Portal.models import Trainee
+from VTS_Admin_Portal.models import Trainee, Trainer
 from .models import Exam, ExamQuestion, TraineeExam, TraineeAnswer
 from .forms import ExamForm, ExamQuestionForm
 from django.utils import timezone
@@ -100,7 +100,18 @@ def exam_result_list(request):
    
     search_result = request.GET.get('r', '')
 
-    results = TraineeExam.objects.select_related('trainee__user', 'exam')
+
+
+    # results = TraineeExam.objects.select_related('trainee__user', 'exam')
+    trainer = Trainer.objects.get(user=request.user) 
+    results = TraineeExam.objects.select_related('trainee__user', 'exam').filter(
+    trainee__assigned_trainer=trainer
+)
+      
+    print("Result_New", results)
+
+
+    
 
     # Filter by exam ID if provided
     if exam_id:
