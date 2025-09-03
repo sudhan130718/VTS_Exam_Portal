@@ -137,13 +137,44 @@
   <div class="modal-content">
     <span class="close-btn" id="closeModalBtn">&times;</span>
 
-    <h2 class="modal-title">Upload Practical Question</h2>
+    <!-- <h2 class="modal-title">Upload Practical Question</h2>
     
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
       <button type="submit" class="submit-btn">Submit Question</button>
-    </form>
+    </form>  -->
+     <h2 class="modal-title">Upload Practical Question</h2>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  
+  <div class="form-group">
+    {{ form.course.label_tag }}
+    {{ form.course }}
+    {% if form.course.errors %}
+      <div class="error">{{ form.course.errors }}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    {{ form.title.label_tag }}
+    {{ form.title }}
+    {% if form.title.errors %}
+      <div class="error">{{ form.title.errors }}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="file-upload" id="upload-btn">Select files :</label>
+    <input id="file-upload" type="file" name="question_pdf"  />
+    <p class="upload-info">Supported formats: PDF, DOCX, DOC (Max 10MB)</p>
+    <div id="file-status" style="margin-top: 10px; font-size:14px; color:#333;"></div>
+  </div>
+
+  <button type="submit" class="submit-btn">Submit Question</button>
+</form> 
   </div>
 </div>
 
