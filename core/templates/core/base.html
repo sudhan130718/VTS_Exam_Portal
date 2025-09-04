@@ -286,7 +286,7 @@ function closeModal() {
 
 </script>
 
-<!-- <script>
+ <script>
   const fileInput = document.getElementById("file-upload");
   const fileStatus = document.getElementById("file-status");
 
@@ -294,8 +294,10 @@ function closeModal() {
   const allowedTypes = ["application/pdf", 
                         "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
                         "application/msword"];
-  const maxSize = 10 * 1024 * 1024; // 10MB
+  // const maxSize = 10 * 1024 * 1024; // 10MB
+   const maxSize =10486784; // 10MB
 
+  console.log("maxSize", maxSize)
   fileInput.addEventListener("change", () => {
     fileStatus.innerHTML = ""; 
     const file = fileInput.files[0];
@@ -308,6 +310,7 @@ function closeModal() {
       fileInput.value = "";
       return;
     }
+  console.log("file.size", file.size)
 
     // Validate file size
     if (file.size > maxSize) {
@@ -321,29 +324,29 @@ function closeModal() {
     fileStatus.style.color = "green";
     fileStatus.innerHTML = ` File uploaded: <b>${file.name}</b> (${(file.size/1024/1024).toFixed(2)} MB)`;
   });
-</script> -->
+</script>
 
 
- <script>
+ <!-- <script>
   const fileInput = document.getElementById("file-upload");
   const fileStatus = document.getElementById("file-status");
 
-  // Allowed file types
+  
   const allowedTypes = [
     "application/pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "application/msword"
   ];
 
-  // Decimal MB (10 MB = 10,000,000 bytes)
+ 
   const maxSize = 10 * 1000 * 1000;
 
   fileInput.addEventListener("change", () => {
-    fileStatus.innerHTML = ""; // clear previous message
+    fileStatus.innerHTML = ""; 
     const file = fileInput.files[0];
     if (!file) return;
 
-    // Validate file type
+    
     if (!allowedTypes.includes(file.type)) {
       fileStatus.style.color = "red";
       fileStatus.innerHTML = "Unsupported file type. Please upload PDF, DOCX, or DOC.";
@@ -351,7 +354,6 @@ function closeModal() {
       return;
     }
 
-    // Validate file size (decimal MB strict)
     if (file.size > maxSize) {
       fileStatus.style.color = "red";
       fileStatus.innerHTML = `File is too large. Maximum allowed size is 10MB. <b>${file.name}</b> (${(file.size/1000/1000).toFixed(2)} MB)`;
@@ -359,11 +361,10 @@ function closeModal() {
       return;
     }
 
-    // Success
     fileStatus.style.color = "green";
     fileStatus.innerHTML = `File uploaded: <b>${file.name}</b> (${(file.size/1000/1000).toFixed(2)} MB)`;
   });
-</script>
+</script> -->
 
 {% block extra_js %}{% endblock %}
 </body>
