@@ -69,10 +69,14 @@
       <thead>
         <tr>
           <th>Title</th>
+                    <th>Triner</th>
+
           <th>Course</th>
           <th>Date</th>
           <th>Start Time</th>
           <th>Duration (min)</th>
+                    <th>Total Questions</th>
+
           <th>Total Marks</th>
           <th>Questions</th>
           <th>Actions</th>
@@ -83,12 +87,16 @@
         {% for exam in exams %}
         <tr>
           <td>{{ exam.title }}</td>
+                    <td>{{ exam.trainer }}</td>
+
           <td>{{ exam.course.name }}</td>
           <td>{{ exam.date }}</td>
           <td>{{ exam.start_time }}</td>
           <td>{{ exam.duration_minutes }}</td>
           <td>{{ exam.total_marks }}</td>
-          <td><a href="{% url 'add_exam_question_form' %}?exam_id={{ exam.id }}" class="submit-btn">Add Question</a></td>
+                    <td>{{ exam.total_marks }}</td>
+
+          <td><a href="{% url 'add_exam_question_form' %}?exam_id={{ exam.id }}" class="submit-btn">+ Add </a></td>
           <td class="action-icons">
            
          <a  href="{% url 'edit_exam' exam.id %}"  title="Edit">
@@ -101,7 +109,7 @@
 <i class="fas fa-trash-alt action-icon" style="color: rgb(244, 74, 74);"></i></a>
         
         </td>
-                  <td ><a style="color: #6622e5;"  href="{% url 'exam_result_list' %}?exam_id={{ exam.id }}" class="submit-btn">View Result</a></td>
+                  <td ><a style="color: #6622e5;"  href="{% url 'exam_result_list' %}?exam_id={{ exam.id }}" class="submit-btn">View </a></td>
 
         </tr>
         {% empty %}

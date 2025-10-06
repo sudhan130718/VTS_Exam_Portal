@@ -3,6 +3,15 @@ from django.conf import settings
 from django.utils import timezone
 
 class Exam(models.Model):
+    trainer = models.ForeignKey(
+    'VTS_Admin_Portal.Trainer',
+    on_delete=models.SET_NULL,   # If trainer is deleted, set NULL instead of deleting Exam
+    null=True,                   # Allow NULL in database
+    blank=True,                  # Allow empty in Django forms/admin
+    default=None                 # Default value is None
+)
+
+
     course = models.ForeignKey('VTS_Admin_Portal.Course', on_delete=models.CASCADE, related_name='exams')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -26,6 +35,14 @@ class ExamQuestion(models.Model):
 
     def __str__(self):
         return self.question_text[:50]
+    
+    def save(self, *args, **kwargs):
+        # Check existing question count for this exam
+        if self.exam.questions.count() >= self.exam.total_marks:
+            from django.core.exceptions import ValidationError
+            raise ValidationError(f"Cannot add more than {self.exam.total_marks} questions for this exam.")
+        
+        super().save(*args, **kwargs)
 
 
 class TraineeExam(models.Model):

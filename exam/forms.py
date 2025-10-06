@@ -20,10 +20,20 @@ class ExamForm(forms.ModelForm):
          }
         
     def __init__(self, *args, **kwargs):
+      user = kwargs.pop('user', None)
+      print("user",user)
+
       super().__init__(*args, **kwargs)
+
+       # Filter course dropdown based on logged-in trainer
+      if user:
+            trainer = getattr(user, 'trainer_profile', None)
+            if trainer:
+                self.fields['course'].queryset = trainer.courses.all()
         
       self.fields['date'].input_formats = ['%Y/%m/%d']
 
+    
 
 class ExamQuestionForm(forms.ModelForm):
     class Meta:

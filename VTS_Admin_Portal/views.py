@@ -111,9 +111,14 @@ def exam_list(request):
     return render(request, 'VTS_Admin_Portal/admin_exam_list.html', {'exams': exams})
 
 def add_exam(request):
-    form = ExamForm(request.POST or None)
+    trainer = getattr(request.user, 'trainer_profile', None)
+    courses = trainer.courses.all()  
+    print("courses", courses)     
+    form = ExamForm(request.POST or None, user=request.user)
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        exam = form.save(commit=False)
+        exam.trainer = trainer
+        exam.save()
         return redirect('exam_list')
     return render(request, 'VTS_Admin_Portal/admin_add_edit_exam.html', {'form': form, 'mode': 'Add'})
 

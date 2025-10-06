@@ -42,7 +42,9 @@
     <div class="section-title-bar">
       <h4>Technical  Exams</h4>
     </div>
+{% if exams %}
 {% for exam in exams %}
+ {% if exam.questions.count == exam.total_marks %}  {# ✅ show only if ready #}
     <div class="exam-row">
       <div class="exam-info">
         <p class="exam-title">{{ exam.title }}</p>
@@ -65,7 +67,23 @@
 
     
     </div>
-{% endfor %}
+
+
+   
+    {% endif %}    
+    
+
+
+{% endfor %} 
+    {% else %}
+    <p style="text-align: center; color: white; background-color: #3d484e; width: 20%; padding: 5px; border-radius: 10px; margin: 0 auto;">
+        No Technical Exams found.
+    </p>
+
+{% endif %}
+
+
+<hr style="background-color: black; width: 100%;">
 <div class="section-title-bar">
       <h4>Practical  Exams</h4>
     </div>
@@ -98,8 +116,13 @@
     </form>
   </div>
 </div>
-     {% endfor %}
-  </div>
+ {% empty %}
+                <p style="text-align: center; color: white;
+    background-color: #3d484e;
+    width: 20%; padding: 5px; border-radius: 10px;
+    margin: 0 auto;">No Practical Exams found.</p>
+{% endfor %} 
+ </div>
 </div>
 
 <!-- Modal Overlay -->

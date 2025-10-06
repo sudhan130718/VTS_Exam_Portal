@@ -19,11 +19,12 @@ def developer_trainee_dashboard(request):
        return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_dashboard.html', {'trainee': trainee ,'questions': questions})
                
           
+from django.db.models import Count
 
 def developer_trainee_exam(request):
         trainee = get_object_or_404(Trainee, user=request.user)
         
-        
+ 
      # Get exams for the trainee's course
         exams = Exam.objects.filter(course=trainee.assigned_course ).order_by('date', 'start_time')
         # exams = Exam.objects.all()
