@@ -8,7 +8,12 @@
 {% block content %} 
 <div class="trainee-list-section">
   <div class="section-header">
-    <h3>Trainee List > {{selected_class_mode}}</h3>
+<h3>
+    Trainee List
+    {% if selected_class_mode %}
+        > {{ selected_class_mode }}
+    {% endif %}
+</h3>
     <!-- <a href="{% url 'add_trainee' %}" class="add-btn">+ Add Trainee</a> -->
   </div>
 
@@ -17,9 +22,9 @@
     <div class="trainee-card">
       <div class="top-row">
 {% if trainee.user.profile_image %}
-  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 70px; height: 70px; margin-left: 16px;">
+  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 90px; height: 90px; margin-left: 16px; border-radius: 50%;">
 {% else %}
-  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 70px; height: 70px; margin-left: 16px;">
+  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 90px; height: 90px; margin-left: 16px; border-radius: 50%;">
 {% endif %}        <div class="top-details">
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
           <div class="action-icons" style="margin-top: -42px;">
