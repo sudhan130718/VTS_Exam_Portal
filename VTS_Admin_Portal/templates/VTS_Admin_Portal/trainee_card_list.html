@@ -17,9 +17,9 @@
     <div class="trainee-card">
       <div class="top-row">
 {% if trainee.user.profile_image %}
-  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 50px; height: 50px; margin-left: 16px;">
+  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 70px; height: 70px; margin-left: 16px;">
 {% else %}
-  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 50px; height: 50px; margin-left: 16px;">
+  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 70px; height: 70px; margin-left: 16px;">
 {% endif %}        <div class="top-details">
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
           <div class="action-icons" style="margin-top: -42px;">
@@ -34,15 +34,17 @@
       </div>
 
       <div class="middle-info">
-        <p><strong>Duration:</strong> {{ trainee.assigned_course.duration_weeks }} - weeks</p>
-        <p><strong>Course:</strong> {{ trainee.assigned_course }}</p>
-        <p><strong>Class Mode:</strong> {{ trainee.get_class_mode_display }}</p>
+        <p><strong>Duration :</strong><bold> {{ trainee.assigned_course.duration_weeks }} - weeks </bold></p>
+        <p><strong>Course Name :</strong><bold> {{ trainee.assigned_course }}</bold></p>
+        <p><strong>Class Mode :</strong><bold> {{ trainee.get_class_mode_display }}</bold></p>
       </div>
 
       <div class="bottom-info">
-        <p style="margin-left: 22px;">            <img src="{% static 'images/Mail id.png' %}" alt="Edit" class="action-icon edit-icon">
+        <p style="margin-left: 22px;">            <img src="{% static 'images/Mail id.png' %}" alt="Edit" class="action-icon edit-icon" style="margin-right: 8px; vertical-align: middle;"
+>
 {{ trainee.user.email }}</p>
-        <p style="margin-left: 22px;">            <img src="{% static 'images/Phone.png' %}" alt="Edit" class="action-icon edit-icon">
+        <p style="margin-left: 22px;">            <img src="{% static 'images/Phone.png' %}" alt="Edit" class="action-icon edit-icon" style="margin-right: 8px; vertical-align: middle;"
+>
  {{ trainee.user.mobile }}</p>
        <div id="view_more" style="margin-top: -38px;">
       

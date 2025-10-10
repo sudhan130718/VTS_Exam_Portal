@@ -65,10 +65,82 @@
   <div class="table-header">
     <h3>{{ title }} List</h3>
 {% if not search_query %}
-<button id="filterBtn" class="add-btn filter-btn" style="display: flex; flex-direction: row; gap: 15px; font-size: 16px;">
+<div class="add-container">
+<button id="filterBtn" class="filter-btn" style="display: flex; flex-direction: row; gap: 15px; font-size: 16px;">
   <img src="{% static 'images/filter.png' %}" style="background-color: #ffffff;" alt="Filter Icon" />
   Filter
 </button>
+
+
+<div id="filterModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 style="margin-bottom: 20px;">Filter by</h2>
+    <hr>
+
+    <form method="get" action="{% url 'trainee_card_view' %}">
+
+      <div class="form-group">
+       <label for="trainer">Trainer Name</label>
+<select name="trainer" id="trainer">
+  <option value="" disabled selected>__Select a Trainer__</option>
+  {% for t in trainers %}
+    <option value="{{ t.id }}" {% if t.id|stringformat:"s" == selected_trainer_id %}selected{% endif %}>{{ t.user.full_name }}</option>
+  {% endfor %}
+</select>
+      </div>
+      
+
+      <div class="form-group">
+        <label for="course">Course Name</label>
+        <select name="course" id="course">
+  <option value="" disabled selected>__Select a Course__</option>
+  {% for c in course %}
+    <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_course_id %}selected{% endif %}>{{ c.name }}</option>
+  {% endfor %}
+</select>
+      </div>
+
+      
+
+      <div class="form-group">
+         <label for="duration">Durations (in weeks)</label>
+  <input 
+    type="number" 
+    name="duration" 
+    id="duration" 
+    min="1" 
+    placeholder="Enter number of weeks"
+    value="{{ selected_duration }}"
+  />
+      </div>
+
+      <div class="form-group">
+       
+<label>Class Mode</label>
+<div class="radio-group">
+  <label class="radio-option">
+    <input type="radio" name="class_mode" value="online" {% if selected_class_mode == 'online' %}checked{% endif %}>
+    Online
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="class_mode" value="offline" {% if selected_class_mode == 'offline' %}checked{% endif %}>
+    Offline
+  </label>
+</div>
+
+      </div>
+<div class="modal_submit">
+      <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+</div>
     <a  href="{% url 'add_trainee' %}?role={{selected_role}}" class="add-btn">+ Add Trainee</a>
     {% endif %}
   </div>
@@ -143,72 +215,6 @@
         {% endfor %}
       </tbody>
     </table>
-  </div>
-</div>
-
-<div id="filterModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2 style="margin-bottom: 20px;">Filter by</h2>
-    <hr>
-
-    <form method="get" action="{% url 'trainee_card_view' %}">
-
-      <div class="form-group">
-       <label for="trainer">Trainer Name</label>
-<select name="trainer" id="trainer">
-  <option value="" disabled selected>__Select a Trainer__</option>
-  {% for t in trainers %}
-    <option value="{{ t.id }}" {% if t.id|stringformat:"s" == selected_trainer_id %}selected{% endif %}>{{ t.user.full_name }}</option>
-  {% endfor %}
-</select>
-      </div>
-      
-
-      <div class="form-group">
-        <label for="course">Course Name</label>
-        <select name="course" id="course">
-  <option value="" disabled selected>__Select a Course__</option>
-  {% for c in course %}
-    <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_course_id %}selected{% endif %}>{{ c.name }}</option>
-  {% endfor %}
-</select>
-      </div>
-
-      
-
-      <div class="form-group">
-         <label for="duration">Durations (in weeks)</label>
-  <input 
-    type="number" 
-    name="duration" 
-    id="duration" 
-    min="1" 
-    placeholder="Enter number of weeks"
-    value="{{ selected_duration }}"
-  />
-      </div>
-
-      <div class="form-group">
-       
-<label>Class Mode</label>
-<div class="radio-group">
-  <label class="radio-option">
-    <input type="radio" name="class_mode" value="online" {% if selected_class_mode == 'online' %}checked{% endif %}>
-    Online
-  </label>
-
-  <label class="radio-option">
-    <input type="radio" name="class_mode" value="offline" {% if selected_class_mode == 'offline' %}checked{% endif %}>
-    Offline
-  </label>
-</div>
-
-      </div>
-<div class="modal_submit">
-      <button type="submit" class="submit-btn">Submit</button>
-      </div>
-    </form>
   </div>
 </div>
 

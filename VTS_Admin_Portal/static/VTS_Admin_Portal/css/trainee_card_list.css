@@ -115,7 +115,7 @@ h3 a:hover {
 .middle-info p {
   margin: 4px 0;
   font-size: 16px;
-  color: #333;
+  color: #140d0d;
 }
 
 .bottom-info {
@@ -126,8 +126,9 @@ h3 a:hover {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  color: #555;
+  font-size: 16px;
+  color: #100f0f;
+  font-weight: 600;
 }
 
 .bottom-info .icon {
