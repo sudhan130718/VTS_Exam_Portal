@@ -22,9 +22,9 @@
     <div class="trainee-card">
       <div class="top-row">
 {% if trainee.user.profile_image %}
-  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 90px; height: 90px; margin-left: 16px; border-radius: 50%;">
+  <img src="{{ trainee.user.profile_image.url }}" alt="Trainee" style="width: 80px; height: 80px; margin-left: 16px; border-radius: 50%;">
 {% else %}
-  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 90px; height: 90px; margin-left: 16px; border-radius: 50%;">
+  <img src="{% static 'images/img 1.png' %}" alt="Default Profile" style="width: 80px; height: 80px; margin-left: 16px; border-radius: 50%;">
 {% endif %}        <div class="top-details">
           <p class="trainee-name">{{ trainee.user.full_name }}</p>
           <div class="action-icons" style="margin-top: -42px;">
