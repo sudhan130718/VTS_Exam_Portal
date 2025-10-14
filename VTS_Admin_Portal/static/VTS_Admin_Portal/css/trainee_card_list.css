@@ -154,11 +154,13 @@ h3 a:hover {
   display: none;
   position: fixed;
   z-index: 999;
-  padding-top: 40px;
+
   left: 0; top: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.6);
+ 
 }
 
 /* Modal box */
@@ -169,6 +171,8 @@ h3 a:hover {
   border-radius: 15px;
   width: 90%;
   max-width: 500px;
+    max-height: 90vh;      /* ✅ Prevents it from exceeding screen height */
+  overflow-y: auto; 
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -213,14 +217,21 @@ h3 a:hover {
 }
 
 /* Responsive */
-@media (max-width: 480px) {
-  .modal-content {
-    width: 95%;
-    padding: 15px;
+
+/* ✅ Responsive Breakpoints */
+
+@media (min-width: 481px)  {
+ .modal{
+    padding-top: 100px;
   }
-  .trainee-info {
-    font-size: 14px;
+ 
+}
+@media (min-width: 769px)  {
+  .modal{
+      padding-top: 1px;  
+
   }
+  
 }
 
 .trainee-info {
