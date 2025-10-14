@@ -13,6 +13,12 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Urbanist&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Add in your base.html inside <head> -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+
    {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -366,6 +372,20 @@ function closeModal() {
   });
 </script> -->
 
+<!-- Add before closing </body> -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $('.select2').select2({
+            width: '100%',         // Full width
+            dropdownAutoWidth: true,
+            placeholder: "Select an option",
+            allowClear: true,      // Adds clear "x" button
+        });
+    });
+</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

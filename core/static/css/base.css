@@ -12,6 +12,12 @@ html, body {
   background: #263238;
   font-family: 'Urbanist';
 }
+/* Max height for dropdown */
+.select2-results__options {
+    max-height: 200px;  /* scroll if more than 200px */
+    overflow-y: auto;
+}
+
 
 /* Sidebar */
 .sidebar {

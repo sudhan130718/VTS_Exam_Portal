@@ -101,7 +101,7 @@ class TrainerUserForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         self.fields['role'].widget.attrs['readonly'] = True
 
         if not kwargs.get('initial') or not kwargs['initial'].get('email'):
@@ -129,6 +129,10 @@ class TrainerUserForm(forms.Form):
                 'class': 'form-input',
                 'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;',
             })
+
+        self.fields['expertise_area'].widget.attrs.update({
+        'class': 'form-control select2',
+        'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;' })
 
     def clean_email(self):
      email = self.cleaned_data['email']
@@ -237,6 +241,7 @@ class TraineeUserForm(forms.Form):
     class_mode = forms.ChoiceField(choices=Trainee.CLASS_MODE_CHOICES)
     assigned_course = forms.ModelChoiceField(queryset=None, required=True)
 
+
     address_line1 = forms.CharField()
     address_line2 = forms.CharField()
     city = forms.CharField()
@@ -247,10 +252,12 @@ class TraineeUserForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
         self.fields['role'].widget.attrs['readonly'] = True
 
         from .models import Course
         self.fields['assigned_course'].queryset = Course.objects.all()
+
 
         # ADD vs EDIT detection
         if not kwargs.get('initial') or not kwargs['initial'].get('email'):
@@ -267,6 +274,9 @@ class TraineeUserForm(forms.Form):
                 'class': 'form-input',
                 'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;',
             })
+        self.fields['assigned_course'].widget.attrs.update({
+        'class': 'form-control select2',
+        'style': 'width: 100%; height: 36px; font-size: 16px; padding: 5px;'})    
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -369,6 +379,8 @@ class CourseForm(forms.ModelForm):
                 'maxlength': '6',     # Allows 6 digits, like 500000
                 'min': '1'
             }),
+            'category': forms.Select(attrs={'class': 'form-control select2'}),
+            'trainer': forms.Select(attrs={'class': 'form-control select2'}),
          }
         
     def __init__(self, *args, **kwargs):

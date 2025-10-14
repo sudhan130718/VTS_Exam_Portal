@@ -228,7 +228,7 @@ h3 a:hover {
 }
 @media (min-width: 769px)  {
   .modal{
-      padding-top: 1px;  
+      padding-top: 10px;  
 
   }
   
