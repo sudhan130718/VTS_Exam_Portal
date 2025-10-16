@@ -393,9 +393,20 @@ class CourseForm(forms.ModelForm):
 class PracticalQuestionForm(forms.ModelForm):
     class Meta:
         model = PracticalQuestion
-        fields = ['course', 'title','question_pdf']
-
-        
+        fields = ['course', 'title', 'question_pdf']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter Title'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        print("user", user)
+
+
+        # ✅ Filter course dropdown based on logged-in trainer
+        if user:
+            trainer = getattr(user, 'trainer_profile', None)
+
+            if trainer:
+                self.fields['course'].queryset = trainer.courses.all()

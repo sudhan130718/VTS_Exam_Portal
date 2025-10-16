@@ -226,5 +226,14 @@ form input[type="file"] {
   }
 }
 
+.exam-info-line {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* space between items */
+}
+
+.exam-info-line p {
+    margin: 0; /* remove unwanted spacing */
+}
 
 

@@ -20,6 +20,7 @@ def developer_trainee_dashboard(request):
                
           
 from django.db.models import Count
+from django.urls import reverse
 
 def developer_trainee_exam(request):
         trainee = get_object_or_404(Trainee, user=request.user)
@@ -47,7 +48,7 @@ def developer_trainee_exam(request):
             answer.trainee = trainee
             answer.question = question
             answer.save()
-            return redirect('developer_trainee_dashboard')
+            return redirect(f"{reverse('developer_trainee_exam')}?submitted=true")
         else:
          form = PracticalAnswerForm()
 
@@ -67,7 +68,6 @@ def developer_trainee_start_exam(request, exam_id):
         trainee_exam, created = TraineeExam.objects.get_or_create(trainee=trainee, exam=exam)
         questions = exam.questions.all()
         exam_duration =exam.duration_minutes
-        print('exam_duration',exam_duration)
        
 
         return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_start_exam.html', {
@@ -87,7 +87,6 @@ def developer_trainee_submit_exam(request, exam_id):
     if request.method == "POST":
         import json
         image_data = request.POST.get("image")
-        print("Raw request.body:", image_data)
 
         # data = json.loads(request.body)
         # image_data = data.get("image")

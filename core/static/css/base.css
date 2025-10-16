@@ -344,3 +344,22 @@ input::placeholder,
 textarea::placeholder {
   font-family: Urbanist, sans-serif;
 }
+
+.messages .alert {
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.messages .alert {
+    transition: opacity 0.5s ease;
+}

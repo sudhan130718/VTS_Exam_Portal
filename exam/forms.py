@@ -5,7 +5,7 @@ from .models import PracticalAnswer
 class ExamForm(forms.ModelForm):
     class Meta:
         model = Exam
-        fields = ['course', 'title', 'description', 'date', 'start_time', 'duration_minutes', 'total_marks']
+        fields = ['course', 'title', 'description', 'date', 'start_time', 'duration_minutes', 'total_marks', 'isActivate']
         widgets = {
              'date': forms.DateInput(
                 attrs={
@@ -21,17 +21,28 @@ class ExamForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
       user = kwargs.pop('user', None)
-      print("user",user)
 
       super().__init__(*args, **kwargs)
+      # ✅ Initially disable isActivate
+      self.fields['isActivate'].disabled = True
 
        # Filter course dropdown based on logged-in trainer
       if user:
+            print("user", user)
+
             trainer = getattr(user, 'trainer_profile', None)
             if trainer:
                 self.fields['course'].queryset = trainer.courses.all()
         
       self.fields['date'].input_formats = ['%Y/%m/%d']
+
+      # Disable isActivate if total_marks != questions.count
+      if self.instance and self.instance.pk:  # editing existing exam
+            if self.instance.total_marks != self.instance.questions.count():
+                self.fields['isActivate'].disabled = True
+            if self.instance.total_marks == self.instance.questions.count():
+                                self.fields['isActivate'].disabled = False
+
 
     
 

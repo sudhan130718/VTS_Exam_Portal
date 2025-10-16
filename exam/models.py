@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-
 class Exam(models.Model):
     trainer = models.ForeignKey(
     'VTS_Admin_Portal.Trainer',
@@ -19,6 +18,10 @@ class Exam(models.Model):
     start_time = models.TimeField()
     duration_minutes = models.PositiveIntegerField()
     total_marks = models.PositiveIntegerField(default=0)
+    # ✅ New fields
+    isActivate = models.BooleanField(default=False)   
+    isExpired = models.BooleanField(default=False)    
+
 
     def __str__(self):
         return f"{self.title} - {self.course.name}"
@@ -71,6 +74,8 @@ class PracticalQuestion(models.Model):
     title = models.CharField(max_length=200)
     question_pdf = models.FileField(upload_to='practical_questions/')
     created_at = models.DateTimeField(auto_now_add=True)
+    isActivate = models.BooleanField(default=True)   
+
 
     def __str__(self):
         return f"{self.title} ({self.course.name})"    

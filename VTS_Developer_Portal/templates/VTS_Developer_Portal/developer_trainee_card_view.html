@@ -8,13 +8,25 @@
 {% block content %}
 <div class="trainee-list-section">
   <div class="section-header">
-    <h3>
-  Trainee List >
-  <a href="?class_mode=online" {% if selected_mode == "online" %}style="font-weight:bold"{% endif %}>Online</a> >
-  <a href="?class_mode=offline" {% if selected_mode == "offline" %}style="font-weight:bold"{% endif %}>Offline</a>
+   <h3>
+Trainee List : {{ selected_mode|default:"All" }} trainees
 </h3>
+
     <!-- <a href="{% url 'add_trainee' %}" class="add-btn">+ Add New</a> -->
   </div>
+  <form method="get">
+    <label>
+        <input type="radio" name="class_mode" value="" {% if not selected_mode %}checked{% endif %}> All
+    </label> /
+    <label>
+        <input type="radio" name="class_mode" value="online" {% if selected_mode == 'online' %}checked{% endif %}> Online
+    </label> /
+    <label>
+        <input type="radio" name="class_mode" value="offline" {% if selected_mode == 'offline' %}checked{% endif %}> Offline
+    </label>
+    <button type="submit" style="background-color:#d9f274 ; padding:  10px 10px; margin-left: 10px; border-radius: 10%;">Filter</button>
+</form>
+
 
   <div class="trainee-card-container">
     {% for trainee in trainees %}

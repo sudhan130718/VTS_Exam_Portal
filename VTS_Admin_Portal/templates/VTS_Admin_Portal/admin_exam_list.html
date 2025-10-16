@@ -77,7 +77,7 @@
           <th>Duration (min)</th>
                     <th>Total Questions</th>
 
-          <th>Total Marks</th>
+          <th>Added Questions</th>
           <th>Questions</th>
           <th>Actions</th>
           <th>Results</th>
@@ -94,7 +94,10 @@
           <td>{{ exam.start_time }}</td>
           <td>{{ exam.duration_minutes }}</td>
           <td>{{ exam.total_marks }}</td>
-                    <td>{{ exam.total_marks }}</td>
+                    <!-- <td>{{ exam.total_marks }}</td> -->
+<td class="{% if exam.total_marks == exam.questions.count %}green-text{% else %}red-text{% endif %}">
+    {{ exam.questions.count }}
+</td>
 
           <td><a href="{% url 'add_exam_question_form' %}?exam_id={{ exam.id }}" class="submit-btn">+ Add </a></td>
           <td class="action-icons">

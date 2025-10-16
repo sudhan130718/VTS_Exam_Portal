@@ -110,17 +110,44 @@ def exam_list(request):
     
     return render(request, 'VTS_Admin_Portal/admin_exam_list.html', {'exams': exams})
 
+# def add_exam(request):
+#     trainer = getattr(request.user, 'trainer_profile', None)
+#     courses = trainer.courses.all()  
+#     print("courses", courses)     
+#     form = ExamForm(request.POST or None, user=request.user)
+#     if request.method == 'POST' and form.is_valid():
+#         exam = form.save(commit=False)
+#         exam.trainer = trainer
+#         exam.save()
+#         return redirect('exam_list')
+#     return render(request, 'VTS_Admin_Portal/admin_add_edit_exam.html', {'form': form, 'mode': 'Add'})
+
+
 def add_exam(request):
     trainer = getattr(request.user, 'trainer_profile', None)
-    courses = trainer.courses.all()  
-    print("courses", courses)     
-    form = ExamForm(request.POST or None, user=request.user)
-    if request.method == 'POST' and form.is_valid():
-        exam = form.save(commit=False)
-        exam.trainer = trainer
-        exam.save()
+
+    # ✅ Ensure trainer exists before proceeding
+    if not trainer:
+        messages.error(request, "Trainer profile not found. Please contact admin.")
         return redirect('exam_list')
-    return render(request, 'VTS_Admin_Portal/admin_add_edit_exam.html', {'form': form, 'mode': 'Add'})
+
+    if request.method == 'POST':
+        form = ExamForm(request.POST, user=request.user)
+        if form.is_valid():
+            exam = form.save(commit=False)
+            exam.trainer = trainer  # ✅ Now trainer is guaranteed
+            exam.save()
+            return redirect('exam_list')
+        else:
+            messages.error(request, "Please fill all fields in the form.")
+    else:
+        form = ExamForm(user=request.user)
+
+    return render(request, 'VTS_Admin_Portal/admin_add_edit_exam.html', {
+        'form': form,
+        'mode': 'Add'
+    })
+
 
 def edit_exam(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id)
@@ -229,7 +256,8 @@ def practical_question_list(request):
             form.save()
             return redirect('practical_question_list')  # or reload the same page
     else:
-        form = PracticalQuestionForm()
+          form = PracticalQuestionForm(user=request.user)
+
     return render(request, 'VTS_Admin_Portal/practical_question_list.html', {'questions': questions, 'form': form})
 
 def delete_practical_question(request, pk):
@@ -271,7 +299,6 @@ def admin_logout(request):
 
 def developer_list_view(request):
     role = request.GET.get('role', 'developer')  # default to 'developer'
-    print('role_name', role)
     search_trainer = request.GET.get('t', '')    # search term from URL param ?t=
 
     # Step 1: Filter by role and active status
@@ -282,7 +309,6 @@ def developer_list_view(request):
         'designer': 'Designer',
     }
     title = title_map.get(role, 'Developer')
-    print('title_name', title)
 
     # Step 2: Filter only the already-role-filtered queryset if search exists
     if search_trainer:
@@ -667,7 +693,6 @@ def add_course(request):
 
         if form.is_valid():
             start_date = form.cleaned_data['start_date']
-            print("Start Date:", start_date)
             form.save()
             return redirect('course_list')
     else:

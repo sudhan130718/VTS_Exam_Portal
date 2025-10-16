@@ -45,7 +45,6 @@ def developer_trainee_card_view(request):
 def developer_exam(request):
     # trainer = Trainer.objects.get(user=request.user) 
     # courses = Course.objects.filter(trainer=trainer)
-    # print('courses', courses)
 
     # exams = Exam.objects.filter(course__in=courses).order_by('-id')
     exams = Exam.objects.all()
@@ -80,7 +79,6 @@ def developer_result(request):
     results = TraineeExam.objects.all()
 
       
-    print("Result_New", results)
 
 
     
@@ -101,7 +99,6 @@ def developer_result(request):
 
     # Filter by search query if provided
     if search_result:
-        print("search_result", search_result)
 
         results = results.filter(
             Q(trainee__user__full_name__icontains=search_result) |
@@ -120,7 +117,6 @@ def developer_result(request):
         results = results.filter(submitted_at__in=latest_dates)
 
     results = results.order_by('-submitted_at')
-    print("Result", results)
 
    
     

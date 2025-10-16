@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'VTS_Designer_Portal',
     'VTS_Developer_Portal',
     'VTS_Developer_Trainee_Portal',
-    'exam'
+    'exam',
 
 ]
 
@@ -87,6 +87,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'VTS_Admin_Portal.context_processors.developer_list',
                 'VTS_Admin_Portal.context_processors.global_greeting',
+                
             ],
         },
     },

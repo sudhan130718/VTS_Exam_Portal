@@ -53,3 +53,9 @@
   margin-right: 8px;
   cursor: pointer;
 }
+.green-text {
+    color: green;
+}
+.red-text {
+    color: red;
+}

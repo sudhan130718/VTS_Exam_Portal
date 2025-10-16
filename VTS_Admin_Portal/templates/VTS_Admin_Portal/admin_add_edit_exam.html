@@ -18,15 +18,30 @@
       {{ form.start_time.label_tag }} {{ form.start_time }}
       {{ form.duration_minutes.label_tag }} {{ form.duration_minutes }}
       {{ form.total_marks.label_tag }} {{ form.total_marks }}
+
+          
+
+
+
     </div>
-    <button type="submit" class="submit-btn">
+<div class="action-box">
+    <h4 class="action-title"> {{ form.isActivate.label }}</h4>
+    <div class="action-row">
+        <label>{{ form.isActivate }}  YES</label>
+    </div>
+</div>
+
+
+    <button type="submit" class="submit-btn" onclick="this.disabled=true; this.form.submit();">
     {% if mode == 'Edit' %} Update {% else %} Add {% endif %}
 
     </button>
-    <button class="submit-btn" style="background-color: #888888;"><a style="text-decoration: none !important; 
-  color: inherit !important;" href="{% url 'exam_list' %}">Cancel</a></button>
     
   </form>
+
+  <button class="submit-btn" style="background-color: #888888;"><a style="text-decoration: none !important; 
+  color: inherit !important;" href="{% url 'exam_list' %}">Cancel</a></button>
+    
 </div>
 <hr>
 <div class="question-list-container">
@@ -78,4 +93,16 @@
     </table>
   </div>
 </div>
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
 {% endblock %}

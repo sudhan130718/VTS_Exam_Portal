@@ -40,10 +40,12 @@
     </div>
 
     <div class="button-group">
-      <a href="{% url 'exam_list' %}" class="cancel-btn">Cancel</a>
-      <button type="submit" class="submit-btn">{% if mode == 'Edit' %} Update {% else %} Add {% endif %}</button>
+      <button type="submit" class="submit-btn">{% if mode == 'Edit' %} Update {% else %} + Add question {% endif %}</button>
     </div>
   </form>
+  <div class="button-group">
+      <a href="{% url 'exam_list' %}" class="cancel-btn">Cancel</a>
+    </div>
 </div>
 
 
