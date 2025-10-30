@@ -84,28 +84,49 @@ def developer_trainee_submit_exam(request, exam_id):
     trainee = request.user.trainee_profile
     trainee_exam = get_object_or_404(TraineeExam, trainee=trainee, exam=exam)
 
+    # ✅ Check first — already submitted?
+    if trainee_exam.attended:
+        messages.warning(request, "You have already submitted this exam.")
+        return redirect('developer_trainee_all_results')
+
+   
+
     if request.method == "POST":
         import json
-        image_data = request.POST.get("image")
+        video_file = None
+        # image_data = None
+        # image_data = request.POST.get("image")
+        # video_file = request.FILES.get("video")
 
         # data = json.loads(request.body)
         # image_data = data.get("image")
 
        
 
-        
-        if image_data:
-            format, imgstr = image_data.split(';base64,') 
-            ext = format.split('/')[-1]  
-            file_data = ContentFile(base64.b64decode(imgstr), name=f"snapshot.{ext}")
+  
+
+    print("FILES RECEIVED:", request.FILES)  # 👈 add this line
+
+    if 'video' in request.FILES:
+            video_file = request.FILES['video']
+            print("✅ Video file found:", video_file.name, video_file.size)
+            trainee_exam.video = video_file
+            trainee_exam.save(update_fields=["video"])
+            print("🎥 Received video:", video_file)
+    else:
+            print("🚫 No video file found in request.FILES")   
+
+   
+    # if image_data:
+    #         format, imgstr = image_data.split(';base64,') 
+    #         ext = format.split('/')[-1]  
+    #         file_data = ContentFile(base64.b64decode(imgstr), name=f"snapshot.{ext}")
             
-            TraineeExam.objects.create(image=file_data)
+    #         TraineeExam.objects.create(image=file_data)
 
     
-
-    if trainee_exam.attended:
-        messages.warning(request, "You have already submitted this exam.")
-        return redirect('developer_trainee_all_results')
+   
+   
     
     
     score = 0
@@ -125,6 +146,11 @@ def developer_trainee_submit_exam(request, exam_id):
     trainee_exam.attended = True
     trainee_exam.submitted_at = timezone.now()
     trainee_exam.save()
+
+
+
+
+   
 
     return render(request, 'VTS_Developer_Trainee_Portal/developer_trainee_exam_result.html', {'exam':exam, 'score': score, 'total': exam.questions.count()})
 

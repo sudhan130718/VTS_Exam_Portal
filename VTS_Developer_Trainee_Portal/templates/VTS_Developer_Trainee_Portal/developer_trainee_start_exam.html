@@ -29,12 +29,16 @@
   <!-- <video hidden id="webcam" autoplay playsinline width="320" height="240" style="border: 2px solid #000;"></video> -->
 <!-- <video id="video" width="320" height="240" autoplay muted></video>
 <canvas id="canvas" width="320" height="240" style="display: none;"></canvas> -->
+
+<video id="cameraPreview" autoplay muted playsinline style="width:300px;border:2px solid #555;border-radius:10px;"></video>
   <h2>{{ exam.title }}</h2>
   <div id="timer" style="font-size: 24px; color: red;"></div>
 
-  <form method="POST" id="examForm" action="{% url 'developer_trainee_submit_exam' exam.id %}">
+  <form method="POST" id="examForm" enctype="multipart/form-data" action="{% url 'developer_trainee_submit_exam' exam.id %}">
     {% csrf_token %}
-    {% for question in questions %}
+<!-- hidden video file input (auto-filled by JS) -->
+    <input type="file" name="video" id="videoInput" accept="video/*" hidden>
+        {% for question in questions %}
       <div class="mb-4">
         <p><strong>Q{{ forloop.counter }}. {{ question.question_text }}</strong></p>
         <div>
@@ -51,6 +55,85 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let mediaRecorder;
+    let recordedChunks = [];
+    const examForm = document.getElementById('examForm');
+    const cameraPreview = document.getElementById('cameraPreview');
+    const videoInput = document.getElementById('videoInput');
+
+    // 🎥 Start recording
+    async function startRecording() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            cameraPreview.srcObject = stream;
+            recordedChunks = [];
+
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) recordedChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                console.log("🎬 Recording stopped event triggered");
+                const blob = new Blob(recordedChunks, { type: "video/webm" });
+                const file = new File([blob], "exam_recording.webm", { type: "video/webm" });
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                videoInput.files = dataTransfer.files;
+
+                console.log("✅ Video attached to form, submitting...");
+                examForm.submit();
+            };
+
+            mediaRecorder.start();
+            console.log("🎥 Recording started...");
+        } catch (err) {
+            console.error("🚫 Camera access denied:", err);
+            alert("Camera access required to continue the exam.");
+        }
+    }
+
+    // 🧱 Stop recording & submit after delay
+    function stopRecordingAndSubmit() {
+      debugger
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+            console.log("🛑 Stopping recording...");
+            mediaRecorder.stop();
+
+            // Add safeguard timeout in case 'onstop' doesn't fire quickly
+            setTimeout(() => {
+                if (videoInput.files.length === 0) {
+                    console.warn("⚠️ onstop not triggered in time, submitting anyway...");
+                    examForm.submit();
+                }
+            }, 2000);
+        } else {
+            console.log("⚠️ MediaRecorder inactive or missing, submitting form directly.");
+            examForm.submit();
+        }
+    }
+
+    // ✅ Start recording on load
+    startRecording();
+
+    // ✅ Stop recording when form is submitted
+    examForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        stopRecordingAndSubmit();
+    });
+
+      // Expose globally
+    window.stopRecordingAndSubmit = stopRecordingAndSubmit;
+});
+</script>
+
+
+
+
 <script>
  
   const examDurationMin = Number("{{ exam_duration|default:1 }}");
@@ -90,24 +173,7 @@
     }, 1000);
   }
 
-  // Warn on reload/close/back; also try background submit
-  window.addEventListener('beforeunload', function (e) {
-    if (!examSubmitted) {
-      // Show browser default confirmation
-      e.preventDefault();
-      e.returnValue = '';
-
-      // Try to submit answers in background with sendBeacon
-      try {
-        const fd = new FormData(form);
-        const body = new URLSearchParams(fd).toString();
-        const blob = new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
-        navigator.sendBeacon(form.action, blob);
-      } catch (err) {
-        // ignore
-      }
-    }
-  });
+ 
 
   // Intercept internal link clicks to confirm and auto-submit
   document.addEventListener('click', function (e) {
@@ -187,6 +253,75 @@
   // Take snapshot every 30 seconds
   setInterval(captureAndSendImage, 30000);
 </script>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const examId = parseInt("{{ exam.id }}");
+    const examForm = document.getElementById('examForm');
+    let examEnded = false;
+
+   
+function autoSubmitExam(reason) {
+  debugger
+   
+                 if (examEnded) return;
+        examEnded = true;
+
+        alert("⚠️ Exam auto-submitted due to: " + reason);
+
+        if (typeof stopRecordingAndSubmit === "function") {
+            console.log("🎥 Stopping recording before submitting exam...");
+            stopRecordingAndSubmit();  // ✅ call from the other script
+        } else {
+            console.warn("⚠️ stopRecordingAndSubmit not available, redirecting directly.");
+            window.location.href = `/trainee/submit_exam/${examId}/`;
+        }
+
+}
+
+    // 🚫 1. Prevent refresh or closing tab
+    // window.addEventListener("beforeunload", function (e) {
+    //     e.preventDefault();
+    //     e.returnValue = "⚠️ You are leaving the exam. It will be auto-submitted!";
+    //     autoSubmitExam("Page refresh or tab closed");
+    //     return e.returnValue;
+    // });
+
+    // 🚫 2. Detect tab switch (when page loses focus)
+    // document.addEventListener("visibilitychange", function() {
+    //     if (document.hidden) {
+    //         autoSubmitExam("Switching to another tab or app");
+    //     }
+    // });
+
+    // 🚫 3. Detect mouse leaving browser window
+    document.addEventListener('mouseout', function(e) {
+        if (!e.toElement && !e.relatedTarget) {
+            autoSubmitExam("Mouse left exam window");
+        }
+    });
+
+    // 🚫 4. Disable right-click
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // 🚫 5. Optional: Disable key shortcuts like Ctrl+T, Ctrl+W, Alt+Tab
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey && (e.key === 't' || e.key === 'w')) || e.altKey) {
+            e.preventDefault();
+            autoSubmitExam("Keyboard shortcut attempt");
+        }
+    });
+});
+</script>
+
+
+
+
+
+
 
 {% endblock %}
 

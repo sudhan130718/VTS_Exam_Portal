@@ -79,9 +79,12 @@
 
                 {% else %}
                     <!-- 🚀 Start Exam -->
-                    <button class="upload-btn">
+                    <!-- <button class="upload-btn">
                         <a href="{% url 'developer_trainee_start_exam' exam.id %}" class="menu-link">Start Exam</a>
-                    </button>
+                    </button> -->
+                    <button type="button" class="upload-btn" id="startExamBtn" data-exam-id="{{ exam.id }}">
+    <span class="menu-link">Start Exam</span>
+</button>
 
                 {% endif %}
 
@@ -146,9 +149,51 @@
 </div>
 
 <!-- Modal Overlay -->
+<!-- Confirmation Modal -->
+<div id="examModal" class="modal-overlay1">
+    <div class="modal-box">
+        <h2>Exam Instructions ⚠️</h2>
+        <p>Please read carefully before starting:</p>
+        <ul style="text-align:left; font-size: 14px;">
+            <li>❌ Do not refresh or close this page.</li>
+            <br>
+            <li>❌ Do not switch to another tab or window.</li>
+                        <br>
+
+            <li>⚠️ Violations will automatically submit your exam.</li>            <br>
+
+            <li>✅ Click “Accept & Start Exam” to begin.</li>            <br>
+
+        </ul>
+        <div class="modal-actions">
+            <button id="cancelExamBtn" class="cancel-btn">Cancel</button>
+            <button id="acceptExamBtn" class="accept-btn">Accept & Start Exam</button>
+        </div>
+    </div>
+</div>
 
 
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".upload-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+            const examId = this.getAttribute("data-exam-id");
+            document.getElementById("examModal").style.display = "flex";
+
+             // ❌ Cancel button → close modal
+        cancelExamBtn.addEventListener("click", function() {
+            examModal.style.display = "none";
+        });
+
+            // update accept button action dynamically
+            document.getElementById("acceptExamBtn").onclick = function() {
+                window.location.href = `/trainee/developer_trainee_start_exam/${examId}/`;
+            };
+        });
+    });
+});
+</script>
 
 
 {% endblock %}

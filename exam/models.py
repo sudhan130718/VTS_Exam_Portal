@@ -56,6 +56,7 @@ class TraineeExam(models.Model):
     submitted_at = models.DateTimeField(null=True, blank=True)
     image = models.ImageField(upload_to='trainee_exam_images/', default='images/default.jpg')
     timestamp = models.DateTimeField(default=timezone.now)
+    video = models.FileField(upload_to='trainee_exam_videos/', null=True, blank=True)
 
     class Meta:
         unique_together = ('trainee', 'exam')
