@@ -26,35 +26,160 @@
 </div>
 
 <div class="container mt-5">
-  <!-- <video hidden id="webcam" autoplay playsinline width="320" height="240" style="border: 2px solid #000;"></video> -->
-<!-- <video id="video" width="320" height="240" autoplay muted></video>
-<canvas id="canvas" width="320" height="240" style="display: none;"></canvas> -->
-
-<video id="cameraPreview" autoplay muted playsinline style="width:300px;border:2px solid #555;border-radius:10px;"></video>
-  <h2>{{ exam.title }}</h2>
-  <div id="timer" style="font-size: 24px; color: red;"></div>
+  <video id="cameraPreview" autoplay muted playsinline style="width:300px;border:2px solid #555;border-radius:10px;"></video>
+  
+  <h2 class="text-center mb-3">{{ exam.title }}</h2>
+  <div id="timer" style="font-size: 24px; color: red; text-align: center;"></div>
 
   <form method="POST" id="examForm" enctype="multipart/form-data" action="{% url 'developer_trainee_submit_exam' exam.id %}">
     {% csrf_token %}
-<!-- hidden video file input (auto-filled by JS) -->
     <input type="file" name="video" id="videoInput" accept="video/*" hidden>
-        {% for question in questions %}
-      <div class="mb-4">
+
+    <div id="questions-wrapper">
+      {% for question in questions %}
+      <div class="question-block" data-index="{{ forloop.counter0 }}">
         <p><strong>Q{{ forloop.counter }}. {{ question.question_text }}</strong></p>
         <div>
-          <input type="radio" name="q{{ question.id }}" value="A" required> {{ question.option_a }}<br>
-          <input type="radio" name="q{{ question.id }}" value="B"> {{ question.option_b }}<br>
-          <input type="radio" name="q{{ question.id }}" value="C"> {{ question.option_c }}<br>
-          <input type="radio" name="q{{ question.id }}" value="D"> {{ question.option_d }}
+          <label><input type="radio" name="q{{ question.id }}" value="A" required> {{ question.option_a }}</label><br>
+          <label><input type="radio" name="q{{ question.id }}" value="B"> {{ question.option_b }}</label><br>
+          <label><input type="radio" name="q{{ question.id }}" value="C"> {{ question.option_c }}</label><br>
+          <label><input type="radio" name="q{{ question.id }}" value="D"> {{ question.option_d }}</label>
         </div>
       </div>
-    {% endfor %}
-    <button type="submit" class="btn btn-success">Submit Exam</button>
+      {% endfor %}
+    </div>
+
+    <div class="navigation-buttons text-center mt-4">
+      <button type="button" id="prevBtn" ><< Previous</button>
+      <button type="button" id="nextBtn">Next >></button>
+      <button type="submit" id="submitBtn" class="btn btn-success d-none">Submit Exam</button>
+    </div>
   </form>
+</div>
+
+<div id="fullscreenModal">
+  <h2>Start Your Exam</h2>
+  <p style="max-width: 400px; text-align: center; margin-bottom: 20px;">
+    Please activate fullscreen mode to continue your exam.
+  </p>
+  <button id="activateBtn">Activate Fullscreen</button>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const modal = document.getElementById("fullscreenModal");
+  const btn = document.getElementById("activateBtn");
+  // const examId = "{{ exam.id }}";  // Django variable
+      const examId = parseInt("{{ exam.id }}");
+    const examForm = document.getElementById('examForm');
+    let examEnded = false;
+    const menu = document.querySelector("ul.menu");
+        const login = document.querySelector("div.login-icon");
+
+
+   // ✅ Detect exit
+ document.addEventListener('fullscreenchange', function() {
+    const menu = document.querySelector("ul.menu");
+    const login = document.querySelector("div.login-icon");
+
+    if (!document.fullscreenElement) {
+        // ✅ Show the menu immediately
+        if (menu) menu.style.display = "block";
+         login.style.display = "block";
+
+
+
+        // 🕒 Give a short delay so DOM updates before alert/redirect
+        setTimeout(() => {
+            alert("⚠️ You exited full-screen! Auto-submitting exam...");
+
+            if (typeof stopRecordingAndSubmit === "function") {
+                stopRecordingAndSubmit("Exited Full-Screen Mode");
+            } else {
+                window.location.href = `/trainee/submit_exam/${examId}/`;
+            }
+        }, 300);
+    } else {
+        // ✅ Hide the menu when entering fullscreen
+
+        if (menu) menu.style.display = "none";
+                         login.style.display = "none";
+
+    }
+});
+
+
+  btn.addEventListener("click", async () => {
+    try {
+      // ✅ Request fullscreen inside user gesture
+      await document.documentElement.requestFullscreen();
+      console.log("✅ Fullscreen activated.");
+      modal.style.display = "none"; // hide modal
+
+    } catch (err) {
+      console.error("❌ Fullscreen request failed:", err);
+      alert("Please allow fullscreen mode to start the exam.");
+    }
+  });
+});
+
+//  1. Disable right-click
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // 2. Optional: Disable key shortcuts like Ctrl+T, Ctrl+W, Alt+Tab
+  document.addEventListener('keydown', function (e) {
+
+    // Block all Function keys (F1–F12)
+    if (e.key.startsWith('F') && !isNaN(e.key.substring(1))) {
+        e.preventDefault();
+        autoSubmitExam("Function key attempt: " + e.key);
+        return;
+    }
+
+    // Block common keyboard shortcuts that can reload, close, or open tabs
+    if (
+        (e.ctrlKey && (e.key === 't' || e.key === 'w' || e.key === 'r')) || // Ctrl+T / Ctrl+W / Ctrl+R
+        (e.ctrlKey && e.shiftKey && e.key === 'R') || // Ctrl+Shift+R (Hard reload)
+        e.altKey // Any Alt key combination (like Alt+Tab or Alt+F4)
+    ) {
+        e.preventDefault();
+        autoSubmitExam("Keyboard shortcut attempt: " + e.key);
+    }
+});
+
+    // 🚫 1. Prevent refresh or closing tab
+    // window.addEventListener("beforeunload", function (e) {
+    //     e.preventDefault();
+    //     e.returnValue = "⚠️ You are leaving the exam. It will be auto-submitted!";
+    //     autoSubmitExam("Page refresh or tab closed");
+    //     return e.returnValue;
+    // });
+
+// ✅ Auto submit function
+function autoSubmitExam(reason) {
+   
+                 if (examEnded) return;
+        examEnded = true;
+
+        alert("⚠️ Exam auto-submitted due to: " + reason);
+
+        if (typeof stopRecordingAndSubmit === "function") {
+            console.log("🎥 Stopping recording before submitting exam...");
+            stopRecordingAndSubmit();  // ✅ call from the other script
+        } else {
+            console.warn("⚠️ stopRecordingAndSubmit not available, redirecting directly.");
+            window.location.href = `/trainee/submit_exam/${examId}/`;
+        }
+
+}
+
+
+</script>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let mediaRecorder;
@@ -62,6 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const examForm = document.getElementById('examForm');
     const cameraPreview = document.getElementById('cameraPreview');
     const videoInput = document.getElementById('videoInput');
+
+    
 
     // 🎥 Start recording
     async function startRecording() {
@@ -168,7 +295,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if (duration <= 0) {
         clearInterval(countdownId);
         alert("Time's up! Your exam will be submitted automatically.");
-        submitExam('timeout');
+        // submitExam('timeout');
+                autoSubmitExam("timeout: " ,"timeout");
+
       }
     }, 1000);
   }
@@ -209,22 +338,8 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('load', startTimer);
 </script>
 
+
 <!-- <script>
-  const video = document.getElementById('webcam');
-
-  async function startCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      video.srcObject = stream;
-    } catch (error) {
-      alert("Camera access denied or not available.");
-      console.error("Camera error:", error);
-    }
-  }
-
-  window.onload = startCamera;
-</script> -->
-<script>
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -252,35 +367,75 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Take snapshot every 30 seconds
   setInterval(captureAndSendImage, 30000);
-</script>
+</script> -->
 
-
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const examId = parseInt("{{ exam.id }}");
-    const examForm = document.getElementById('examForm');
-    let examEnded = false;
-
-   
-function autoSubmitExam(reason) {
+<!-- <script>
+function startExam(examId) {
   debugger
-   
-                 if (examEnded) return;
-        examEnded = true;
+    try {
+        // ✅ Request fullscreen (must be in a user-triggered event)
+        document.documentElement.requestFullscreen()
+            .then(() => {
+                console.log("✅ Full-screen mode enabled.");
+                // ✅ Redirect after fullscreen success
+                // window.location.href = `/trainee/developer_trainee_start_exam/${examId}/`;
 
-        alert("⚠️ Exam auto-submitted due to: " + reason);
-
-        if (typeof stopRecordingAndSubmit === "function") {
-            console.log("🎥 Stopping recording before submitting exam...");
-            stopRecordingAndSubmit();  // ✅ call from the other script
-        } else {
-            console.warn("⚠️ stopRecordingAndSubmit not available, redirecting directly.");
-            window.location.href = `/trainee/submit_exam/${examId}/`;
-        }
-
+            })
+            .catch((error) => {
+                console.error("❌ Full-screen request failed:", error);
+                alert("Please allow full-screen mode to start the exam.");
+            });
+    } catch (error) {
+        console.error("❌ Unexpected error:", error);
+    }
 }
+</script> -->
+
+
+<!-- <script>
+// document.addEventListener('DOMContentLoaded', function() {
+//         debugger
+//     const examId = parseInt("{{ exam.id }}");
+//     const examForm = document.getElementById('examForm');
+//     let examEnded = false;
+//     startExam(examId) 
+
+
+   
+
+    // ✅ Detect exit
+    // document.addEventListener('fullscreenchange', function() {
+    //     if (!document.fullscreenElement) {
+    //         alert("⚠️ You exited full-screen! Auto-submitting exam...");
+    //         if (typeof stopRecordingAndSubmit === "function") {
+    //             stopRecordingAndSubmit("Exited Full-Screen Mode");
+    //         } else {
+    //             window.location.href = `/trainee/submit_exam/${examId}/`;
+    //         }
+    //     }
+    // });
+
+    
+
+   
+// function autoSubmitExam(reason) {
+   
+//                  if (examEnded) return;
+//         examEnded = true;
+
+//         alert("⚠️ Exam auto-submitted due to: " + reason);
+
+//         if (typeof stopRecordingAndSubmit === "function") {
+//             console.log("🎥 Stopping recording before submitting exam...");
+//             stopRecordingAndSubmit();  // ✅ call from the other script
+//         } else {
+//             console.warn("⚠️ stopRecordingAndSubmit not available, redirecting directly.");
+//             window.location.href = `/trainee/submit_exam/${examId}/`;
+//         }
+
+// }
+
+
 
     // 🚫 1. Prevent refresh or closing tab
     // window.addEventListener("beforeunload", function (e) {
@@ -298,27 +453,59 @@ function autoSubmitExam(reason) {
     // });
 
     // 🚫 3. Detect mouse leaving browser window
-    document.addEventListener('mouseout', function(e) {
-        if (!e.toElement && !e.relatedTarget) {
-            autoSubmitExam("Mouse left exam window");
-        }
-    });
+    // document.addEventListener('mouseout', function(e) {
+    //     if (!e.toElement && !e.relatedTarget) {
+    //         autoSubmitExam("Mouse left exam window");
+    //     }
+    // });
 
     // 🚫 4. Disable right-click
-    document.addEventListener('contextmenu', e => e.preventDefault());
+    // document.addEventListener('contextmenu', e => e.preventDefault());
 
     // 🚫 5. Optional: Disable key shortcuts like Ctrl+T, Ctrl+W, Alt+Tab
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey && (e.key === 't' || e.key === 'w')) || e.altKey) {
-            e.preventDefault();
-            autoSubmitExam("Keyboard shortcut attempt");
-        }
-    });
+    // document.addEventListener('keydown', function(e) {
+    //     if ((e.ctrlKey && (e.key === 't' || e.key === 'w')) || e.altKey) {
+    //         e.preventDefault();
+    //         autoSubmitExam("Keyboard shortcut attempt");
+    //     }
+    // }); }); 
+</script> -->
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const questions = document.querySelectorAll('.question-block');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  let currentQuestion = 0;
+
+  function showQuestion(index) {
+    questions.forEach((q, i) => q.classList.toggle('active', i === index));
+    prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+    nextBtn.style.display = index === questions.length - 1 ? 'none' : 'inline-block';
+    submitBtn.classList.toggle('d-none', index !== questions.length - 1);
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      showQuestion(currentQuestion);
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      showQuestion(currentQuestion);
+    }
+  });
+
+  // Initialize the first question
+  showQuestion(currentQuestion);
 });
 </script>
-
-
-
 
 
 

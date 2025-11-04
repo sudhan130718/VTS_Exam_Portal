@@ -264,7 +264,7 @@ form input[type="file"] {
 }
 
 .accept-btn {
-    background: #28a745;
+    background: #203742;
     color: #fff;
     border: none;
     padding: 10px 16px;
@@ -273,7 +273,7 @@ form input[type="file"] {
 }
 
 .cancel-btn {
-    background: #dc3545;
+    background: #203742;
     color: #fff;
     border: none;
     padding: 10px 16px;

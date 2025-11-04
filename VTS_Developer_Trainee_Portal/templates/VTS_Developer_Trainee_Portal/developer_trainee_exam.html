@@ -160,21 +160,29 @@
             <li>❌ Do not switch to another tab or window.</li>
                         <br>
 
-            <li>⚠️ Violations will automatically submit your exam.</li>            <br>
+            <!-- <li>⚠️ Violations will automatically submit your exam.</li>            <br> -->
+             <li>⚠️ Press <b>Esc</b> — this will automatically submit your exam.</li><br>
+
 
             <li>✅ Click “Accept & Start Exam” to begin.</li>            <br>
 
         </ul>
         <div class="modal-actions">
             <button id="cancelExamBtn" class="cancel-btn">Cancel</button>
-            <button id="acceptExamBtn" class="accept-btn">Accept & Start Exam</button>
+            <button id="acceptExamBtn" class="accept-btn" >Accept & Start Exam</button>
         </div>
     </div>
 </div>
 
 
 
+
+
+{% endblock %}
+{% block extra_js %}
 <script>
+
+  
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".upload-btn").forEach(btn => {
         btn.addEventListener("click", function() {
@@ -194,6 +202,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+
+
 
 
 {% endblock %}

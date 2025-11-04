@@ -41,6 +41,7 @@ ALLOWED_HOSTS = ['vtsexamportal.pythonanywhere.com', 'localhost', '127.0.0.1']
 # vtsexamportal.mysql.pythonanywhere-services.com
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
